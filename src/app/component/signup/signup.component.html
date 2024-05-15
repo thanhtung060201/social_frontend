@@ -1,0 +1,75 @@
+<div class="mt-100 me-auto ms-auto pb-5" style="width: 500px;">
+	<mat-card class="mat-elevation-z3">
+		<mat-card-title class="text-center ps-3 pt-5 pe-3">Đăng ký tài khoản</mat-card-title>
+
+		<mat-card-content class="p-4">
+			<form [formGroup]="signupFormGroup" (ngSubmit)="handleSignup()">
+				<mat-form-field class="w-100 pb-2" appearance="outline" formGroupName="infoGroup">
+					<mat-label>Tên</mat-label>
+					<input type="text" matInput formControlName="firstName" placeholder="Ex. John">
+					<mat-error *ngIf="firstName.hasError('required')">
+						Tên không được để trống
+					</mat-error>
+					<mat-error *ngIf="firstName.hasError('maxlength') || firstName.hasError('serverError')">
+						Tên của bạn phải dài trong vòng 64 ký tự
+					</mat-error>
+				</mat-form-field>
+
+				<mat-form-field class="w-100 pb-2" appearance="outline" formGroupName="infoGroup">
+					<mat-label>Họ</mat-label>
+					<input type="text" matInput formControlName="lastName" placeholder="Ex. Doe">
+					<mat-error *ngIf="lastName.hasError('required')">
+						Họ không được để trống
+					</mat-error>
+					<mat-error *ngIf="lastName.hasError('maxlength') || lastName.hasError('serverError')">
+						Họ của bạn phải dài trong vòng 64 ký tự
+					</mat-error>
+				</mat-form-field>
+
+				<mat-form-field class="w-100 pb-2" appearance="outline" formGroupName="infoGroup">
+					<mat-label>Email</mat-label>
+					<input type="text" matInput formControlName="email" placeholder="Ex. johndoe@example.com">
+					<mat-error *ngIf="email.hasError('required')">
+						Email không được để trống
+					</mat-error>
+					<mat-error *ngIf="email.hasError('email') || email.hasError('serverError')">
+						Email không hợp lệ
+					</mat-error>
+				</mat-form-field>
+
+				<mat-form-field class="w-100 pb-2" appearance="outline" formGroupName="passwordGroup">
+					<mat-label>Mật khẩu</mat-label>
+					<input type="password" matInput formControlName="password" placeholder="*************">
+					<mat-error *ngIf="password.hasError('required')">
+						Mật khẩu không được để trống
+					</mat-error>
+					<mat-error *ngIf="password.hasError('minlength', 'maxlength')">
+            Mật khẩu phải dài từ 6 đến 32 ký tự
+					</mat-error>
+					<mat-error *ngIf="password.hasError('serverError')">
+            Mật khẩu phải là số và phải bao gồm chữ hoa, chữ thường và ký tự đặc biệt
+					</mat-error>
+				</mat-form-field>
+
+				<mat-form-field class="w-100 pb-2" appearance="outline" formGroupName="passwordGroup">
+					<mat-label>Nhập lại mật khẩu</mat-label>
+					<input type="password" matInput formControlName="passwordRepeat" placeholder="*************" [errorStateMatcher]="repeatPasswordMatcher">
+					<mat-error *ngIf="passwordRepeat.hasError('required')">
+						Nhập lại mật khẩu không được để trống
+					</mat-error>
+					<mat-error *ngIf="signupFormGroup.hasError('passwordMissMatch') || passwordRepeat.hasError('serverError')">
+						Mật khẩu không trùng khớp
+					</mat-error>
+				</mat-form-field>
+
+				<mat-card-actions align="end" style="margin-top: -20px; padding-right: 8px;">
+					<button mat-raised-button color="primary" type="submit">Đăng ký</button>
+				</mat-card-actions>
+			</form>
+		</mat-card-content>
+
+		<mat-card-footer *ngIf="submittingForm == true">
+			<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+		</mat-card-footer>
+	</mat-card>
+</div>
