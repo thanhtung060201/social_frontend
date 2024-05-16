@@ -56,7 +56,7 @@ export class AuthService {
 	storeAuthUserInCache(authUser: User): void {
 		if (authUser != null) {
 			this.authUser = authUser;
-			localStorage.setItem('authUser', JSON.stringify(authUser));
+			localStorage.setItem('authUser', JSON.stringify(this.parseJwt(authUser).user));
 		}
 		this.loginSubject.next(authUser);
 	}

@@ -16,19 +16,39 @@ export class PostService {
 
 	constructor(private httpClient: HttpClient) { }
 
-	createNewPost(content: string): Observable<Post | HttpErrorResponse> {
+	createNewPost(content: string, tags: any): Observable<Post | HttpErrorResponse> {
 		// const formData = new FormData();
 		// formData.append('content', content);
 		// formData.append('postPhoto', postPhoto);
 		// formData.append('postTags', JSON.stringify(postTags));
-		return this.httpClient.post<Post | HttpErrorResponse>(`${this.host}/newfeed`, { body: content });
+		return this.httpClient.post<Post | HttpErrorResponse>(`${this.host}/newfeed`, { 
+			post: {
+				body: content
+			},
+			tags: tags
+		 });
 	}
 
-  updateImageByPostId(id: string, fileImage: any) {
-    const formData = new FormData();
+	updateImageByPostId(id: string, fileImage: any) {
+		const formData = new FormData();
 		formData.append('file', fileImage);
 		return this.httpClient.post<any>(`${this.host}/newfeed/upload/${id}`, formData);
-  }
+	}
+
+	createTag(postId: string, name: string) {
+		return this.httpClient.post<any>(`${this.host}/tag`, {
+			postId: postId,
+			name: name
+		});
+	}
+
+	deletePost(postId: any, post: any) {
+		return this.httpClient.put<any>(`${this.host}/newfeed/delete/${postId}`, post);
+	}
+
+	getImageNameByPostId(postId: number) {
+		return this.httpClient.get<any>(`${this.host}/newfeed/image-name/${postId}`);
+	}
 
 	updatePost(postId: number, content: string, postPhoto: File, postTags: any[]): Observable<Post | HttpErrorResponse> {
 		const formData = new FormData();
@@ -42,13 +62,13 @@ export class PostService {
 		return this.httpClient.post<any | HttpErrorResponse>(`${this.host}/posts/${postId}/photo/delete`, null);
 	}
 
-	deletePost(postId: number, isTypeShare: boolean): Observable<any | HttpErrorResponse> {
-		if (isTypeShare) {
-			return this.httpClient.post<any | HttpErrorResponse>(`${this.host}/posts/${postId}/share/delete`, null);
-		} else {
-			return this.httpClient.post<any | HttpErrorResponse>(`${this.host}/posts/${postId}/delete`, null);
-		}
-	}
+	// deletePost(postId: number, isTypeShare: boolean): Observable<any | HttpErrorResponse> {
+	// 	if (isTypeShare) {
+	// 		return this.httpClient.post<any | HttpErrorResponse>(`${this.host}/posts/${postId}/share/delete`, null);
+	// 	} else {
+	// 		return this.httpClient.post<any | HttpErrorResponse>(`${this.host}/posts/${postId}/delete`, null);
+	// 	}
+	// }
 
 	getPostById(postId: number): Observable<PostResponse | HttpErrorResponse> {
 		return this.httpClient.get<PostResponse | HttpErrorResponse>(`${this.host}/posts/${postId}`);

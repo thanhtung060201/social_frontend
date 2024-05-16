@@ -94,19 +94,19 @@ export class PostComponent implements OnInit, OnDestroy {
 
 	openPostDeleteConfirmDialog(): void {
 		const dialogRef = this.matDialog.open(ConfirmationDialogComponent, {
-			data: 'Do you want to delete this post permanently?',
+			data: 'Bạn có chắc chắn muốn xóa bài viết này không?',
 			autoFocus: false,
 			width: '500px'
 		});
 
 		dialogRef.afterClosed().subscribe(
 			result => {
-				if (result) this.deletePost(this.postResponse.id, this.postResponse.isTypeShare);
+				if (result) this.deletePost(this.postResponse.id);
 			}
 		);
 	}
 
-	deletePost(postId: number, isTypeShare: boolean): void {
+	deletePost(postId: number): void {
 		const dialogRef = this.matDialog.open(WaitingDialogComponent, {
 			data: 'Xin vui lòng đợi trong khi chúng tôi xóa bài viết.',
 			width: '500px',
@@ -114,7 +114,7 @@ export class PostComponent implements OnInit, OnDestroy {
 		});
 
 		this.subscriptions.push(
-			this.postService.deletePost(postId, isTypeShare).subscribe({
+			this.postService.deletePost(postId, this.postResponse).subscribe({
 				next: (response: any) => {
 					this.postDeletedEvent.emit(this.postResponse);
 					dialogRef.close();

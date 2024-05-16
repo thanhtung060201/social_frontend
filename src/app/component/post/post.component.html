@@ -31,7 +31,7 @@
 		</mat-menu>
 	</div>
 
-	<img *ngIf="postResponse.imagePath" mat-card-image src="{{ postResponse.imagePath }}" alt="">
+	<img *ngIf="postResponse.imagePath" mat-card-image src="assets/images/{{postResponse.imagePath}}" alt="">
 
 	<mat-card-content class="">
 		<p class="p-2">
@@ -113,7 +113,7 @@
 	</mat-chip-list>
 
 	<mat-card-actions align="end" style="margin-top: -50px !important; padding-bottom: 20px;">
-		<button class="me-2" mat-icon-button matTooltip="{{postResponse.likedByAuthUser ? 'Unlike' : 'Like'}}"
+		<button class="me-2" mat-icon-button matTooltip="{{postResponse.likedByAuthUser ? 'Bỏ thích' : 'Yêu thích'}}"
 			(click)="likeOrUnlikePost(postResponse.likedByAuthUser)">
 			<mat-icon [ngClass]="postResponse.likedByAuthUser ? 'text-danger' : 'text-secondary'">favorite</mat-icon>
 		</button>

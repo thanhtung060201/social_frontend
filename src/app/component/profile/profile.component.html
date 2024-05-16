@@ -68,7 +68,7 @@
 							</mat-list-item>
 						</div>
 
-						<div *ngIf="profileUser.workplace">
+						<!-- <div *ngIf="profileUser.workplace">
 							<mat-divider></mat-divider>
 
 							<mat-list-item>
@@ -77,36 +77,36 @@
 							</mat-list-item>
 
 							<mat-divider></mat-divider>
-						</div>
+						</div> -->
 
-						<div *ngIf="profileUser.eduInstitution">
+						<!-- <div *ngIf="profileUser.eduInstitution">
 							<mat-list-item>
 								<mat-icon class="text-secondary">school</mat-icon>
 								<span class="fw-500 ps-3 small">Studied At <b>{{ profileUser.eduInstitution }}</b></span>
 							</mat-list-item>
 
 							<mat-divider></mat-divider>
-						</div>
+						</div> -->
 
-						<div *ngIf="profileUser.hometown">
+						<!-- <div *ngIf="profileUser.hometown">
 							<mat-list-item *ngIf="profileUser.hometown">
 								<mat-icon class="text-secondary">home</mat-icon>
 								<span class="fw-500 ps-3 small">From <b>{{ profileUser.hometown }}</b></span>
 							</mat-list-item>
 
 							<mat-divider></mat-divider>
-						</div>
+						</div> -->
 
-						<div *ngIf="profileUser.currentCity">
+						<!-- <div *ngIf="profileUser.currentCity">
 							<mat-list-item>
 								<mat-icon class="text-secondary">person_pin_circle</mat-icon>
 								<span class="fw-500 ps-3 small">Lives In <b>{{ profileUser.currentCity}}</b></span>
 							</mat-list-item>
 
 							<mat-divider></mat-divider>
-						</div>
+						</div> -->
 
-						<div *ngIf="profileUser.country">
+						<!-- <div *ngIf="profileUser.country">
 							<mat-list-item>
 								<mat-icon class="text-secondary">place</mat-icon>
 								<span class="fw-500 ps-3 small">Country <b>{{ profileUser.country.name }}</b></span>
@@ -120,7 +120,7 @@
 								<mat-icon class="text-secondary"><mat-icon>account_circle</mat-icon></mat-icon>
 								<span class="fw-500 ps-3 small">Gender <b>{{ profileUser.gender }}</b></span>
 							</mat-list-item>
-						</div>
+						</div> -->
 					</mat-list>
 				</div>
 			</div>
@@ -130,12 +130,12 @@
 					<app-post *ngFor="let postResponse of profileUserPostResponses" id="{{'profilePost' + postResponse.post.id}}" [postResponse]="postResponse" (postDeletedEvent)="handlePostDeletedEvent($event)"></app-post>
 				</div>
 
-				<div class="text-center mt-3">
+				<!-- <div class="text-center mt-3">
 					<button mat-raised-button color="primary" class="mat-btn-lg rounded-pill" *ngIf="hasMoreResult && !fetchingResult" (click)="loadProfilePosts(resultPage)">Load More</button>
 					<mat-spinner style="transform: scale(0.3);" class="text-center ms-auto me-auto" *ngIf="fetchingResult"></mat-spinner>
 					<span class="fw-500" *ngIf="hasNoPost">No Post</span>
 					<span class="fw-500" *ngIf="!hasMoreResult && !hasNoPost">No More Posts</span>
-				</div>
+				</div> -->
 			</div>
 		</div>
 	</div>

@@ -22,7 +22,7 @@ export class UserService {
 	constructor(private httpClient: HttpClient) { }
 
 	getUserById(userId: number): Observable<UserResponse | HttpErrorResponse> {
-		return this.httpClient.get<UserResponse | HttpErrorResponse>(`${this.host}/users/${userId}`);
+		return this.httpClient.get<UserResponse | HttpErrorResponse>(`${this.host}/user/${userId}`);
 	}
 
 	getUserFollowingList(userId: number, page: number, size: number): Observable<UserResponse[] | HttpErrorResponse> {

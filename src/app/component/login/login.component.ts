@@ -65,7 +65,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             console.log(response);
 						const authToken = response.body.token;
 						this.authService.storeTokenInCache(authToken);
-						this.authService.storeAuthUserInCache(response.body);
+						this.authService.storeAuthUserInCache(authToken);
 						this.submittingForm = false;
 						this.router.navigateByUrl('/');
 					},

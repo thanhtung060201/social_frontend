@@ -63,6 +63,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 			this.subscriptions.push(
 				this.userService.getUserById(this.profileUserId).subscribe({
 					next: (foundUserResponse: UserResponse) => {
+						console.log(foundUserResponse);
 						const foundUser: User = foundUserResponse.user;
 
 						if (foundUser.id === this.authUser.id) {

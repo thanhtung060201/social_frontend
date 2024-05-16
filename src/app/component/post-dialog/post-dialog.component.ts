@@ -28,7 +28,7 @@ export class PostDialogComponent implements OnInit, OnDestroy {
 	private subscriptions: Subscription[] = [];
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public dataPost: Post,
+		@Inject(MAT_DIALOG_DATA) public dataPost: any,
 		private postService: PostService,
 		private formBuilder: FormBuilder,
 		private router: Router,
@@ -40,12 +40,12 @@ export class PostDialogComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.postFormGroup = this.formBuilder.group({
-			content: new FormControl(((this.dataPost && this.dataPost.content) ? this.dataPost.content : ''), [Validators.maxLength(4096)])
+			content: new FormControl(((this.dataPost && this.dataPost.body) ? this.dataPost.body : ''), [Validators.maxLength(4096)])
 		});
 
 		if (this.dataPost) {
-			if (this.dataPost.postPhoto) {
-				this.postPhotoPreviewUrl = this.dataPost.postPhoto;
+			if (this.dataPost.imagePath) {
+				this.postPhotoPreviewUrl = this.dataPost.imagePath;
 			}
 
 			this.populateWithPostTags();
@@ -69,7 +69,7 @@ export class PostDialogComponent implements OnInit, OnDestroy {
 
 	openPostPhotoDeleteConfirmDialog(): void {
 		const dialogRef = this.matDialog.open(ConfirmationDialogComponent, {
-			data: 'Do you want to delete this photo?',
+			data: 'Bạn có chắc chắn muốn xóa ảnh?',
 			width: '500px',
 			autoFocus: false
 		});
@@ -139,19 +139,25 @@ export class PostDialogComponent implements OnInit, OnDestroy {
 	private createNewPost(): void {
 		if (!this.creatingPost) {
 			this.creatingPost = true;
+			const dataTagsSave = [...this.postTags.map((tag: any) => tag.tagName)];
 			this.subscriptions.push(
-				this.postService.createNewPost(this.content.value).subscribe({
+				this.postService.createNewPost(this.content.value, dataTagsSave).subscribe({
 					next: (createdPost: any) => {
-            console.log(createdPost);
-            if(createdPost.imagePath) {
-              this.postService.updateImageByPostId(createdPost.id, this.postPhoto);
-            }
+						if (this.postPhoto) {
+							this.postService.updateImageByPostId(createdPost.id, this.postPhoto).subscribe();
+						}
+						if(createdPost.tags.length) {
+							createdPost.tags.forEach((tag: any) => {
+								this.postService.createTag(createdPost.id, tag).subscribe();
+							})
+						}
 						this.matDialogRef.close();
 						this.matSnackbar.openFromComponent(SnackbarComponent, {
 							data: 'Post created successfully.',
 							duration: 5000
 						});
 						this.creatingPost = false;
+						this.postPhoto = null;
 						// this.router.navigateByUrl(`/posts/${createdPost.id}`).then(() => {
 						// 	window.location.reload();
 						// });
@@ -213,7 +219,7 @@ export class PostDialogComponent implements OnInit, OnDestroy {
 	}
 
 	private populateWithPostTags(): void {
-		this.dataPost.postTags.forEach(tag => {
+		this.dataPost.tags.forEach(tag => {
 			this.postTags.push({
 				tagName: tag.name,
 				action: 'saved'

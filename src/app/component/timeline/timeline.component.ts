@@ -63,7 +63,6 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			this.subscriptions.push(
 				this.timelineService.getTimelinePosts().subscribe({
 					next: (postResponseList: any[]) => {
-            console.log(postResponseList)
 						if (!postResponseList.length) this.noPost = true;
 
 						postResponseList.forEach(pR => this.timelinePostResponseList.push(pR));
