@@ -16,13 +16,19 @@ export class PostService {
 
 	constructor(private httpClient: HttpClient) { }
 
-	createNewPost(content: string, postPhoto: File, postTags: any[]): Observable<Post | HttpErrorResponse> {
-		const formData = new FormData();
-		formData.append('content', content);
-		formData.append('postPhoto', postPhoto);
-		formData.append('postTags', JSON.stringify(postTags));
-		return this.httpClient.post<Post | HttpErrorResponse>(`${this.host}/posts/create`, formData);
+	createNewPost(content: string): Observable<Post | HttpErrorResponse> {
+		// const formData = new FormData();
+		// formData.append('content', content);
+		// formData.append('postPhoto', postPhoto);
+		// formData.append('postTags', JSON.stringify(postTags));
+		return this.httpClient.post<Post | HttpErrorResponse>(`${this.host}/newfeed`, { body: content });
 	}
+
+  updateImageByPostId(id: string, fileImage: any) {
+    const formData = new FormData();
+		formData.append('file', fileImage);
+		return this.httpClient.post<any>(`${this.host}/newfeed/upload/${id}`, formData);
+  }
 
 	updatePost(postId: number, content: string, postPhoto: File, postTags: any[]): Observable<Post | HttpErrorResponse> {
 		const formData = new FormData();

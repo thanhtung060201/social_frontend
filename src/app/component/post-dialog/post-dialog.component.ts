@@ -140,17 +140,21 @@ export class PostDialogComponent implements OnInit, OnDestroy {
 		if (!this.creatingPost) {
 			this.creatingPost = true;
 			this.subscriptions.push(
-				this.postService.createNewPost(this.content.value, this.postPhoto, this.postTags).subscribe({
-					next: (createdPost: Post) => {
+				this.postService.createNewPost(this.content.value).subscribe({
+					next: (createdPost: any) => {
+            console.log(createdPost);
+            if(createdPost.imagePath) {
+              this.postService.updateImageByPostId(createdPost.id, this.postPhoto);
+            }
 						this.matDialogRef.close();
 						this.matSnackbar.openFromComponent(SnackbarComponent, {
 							data: 'Post created successfully.',
 							duration: 5000
 						});
 						this.creatingPost = false;
-						this.router.navigateByUrl(`/posts/${createdPost.id}`).then(() => {
-							window.location.reload();
-						});
+						// this.router.navigateByUrl(`/posts/${createdPost.id}`).then(() => {
+						// 	window.location.reload();
+						// });
 					},
 					error: (errorResponse: HttpErrorResponse) => {
 						this.matSnackbar.openFromComponent(SnackbarComponent, {

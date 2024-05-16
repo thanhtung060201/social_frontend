@@ -75,7 +75,7 @@
 								<mat-icon class="text-secondary">work</mat-icon>
 								<span class="fw-500 ps-3 small">Works At <b>{{ profileUser.workplace }}</b></span>
 							</mat-list-item>
-	
+
 							<mat-divider></mat-divider>
 						</div>
 
@@ -84,7 +84,7 @@
 								<mat-icon class="text-secondary">school</mat-icon>
 								<span class="fw-500 ps-3 small">Studied At <b>{{ profileUser.eduInstitution }}</b></span>
 							</mat-list-item>
-	
+
 							<mat-divider></mat-divider>
 						</div>
 
@@ -93,7 +93,7 @@
 								<mat-icon class="text-secondary">home</mat-icon>
 								<span class="fw-500 ps-3 small">From <b>{{ profileUser.hometown }}</b></span>
 							</mat-list-item>
-	
+
 							<mat-divider></mat-divider>
 						</div>
 
@@ -102,19 +102,19 @@
 								<mat-icon class="text-secondary">person_pin_circle</mat-icon>
 								<span class="fw-500 ps-3 small">Lives In <b>{{ profileUser.currentCity}}</b></span>
 							</mat-list-item>
-	
+
 							<mat-divider></mat-divider>
 						</div>
-						
+
 						<div *ngIf="profileUser.country">
 							<mat-list-item>
 								<mat-icon class="text-secondary">place</mat-icon>
 								<span class="fw-500 ps-3 small">Country <b>{{ profileUser.country.name }}</b></span>
 							</mat-list-item>
-	
+
 							<mat-divider></mat-divider>
 						</div>
-						
+
 						<div *ngIf="profileUser.gender">
 							<mat-list-item>
 								<mat-icon class="text-secondary"><mat-icon>account_circle</mat-icon></mat-icon>
@@ -127,7 +127,7 @@
 
 			<div class="col-6 mb-4">
 				<div class="profile-posts">
-					<app-post *ngFor="let postResponse of profileUserPostResponses" id="{{'profilePost' + postResponse.post.id}}" [postResponse]="postResponse" [isDetailedPost]="false" (postDeletedEvent)="handlePostDeletedEvent($event)"></app-post>
+					<app-post *ngFor="let postResponse of profileUserPostResponses" id="{{'profilePost' + postResponse.post.id}}" [postResponse]="postResponse" (postDeletedEvent)="handlePostDeletedEvent($event)"></app-post>
 				</div>
 
 				<div class="text-center mt-3">

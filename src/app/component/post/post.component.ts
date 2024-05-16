@@ -24,7 +24,6 @@ import { WaitingDialogComponent } from '../waiting-dialog/waiting-dialog.compone
 })
 export class PostComponent implements OnInit, OnDestroy {
 	@Input() postResponse: any;
-	@Input() isDetailedPost: boolean;
 	@Output() postDeletedEvent = new EventEmitter<any>();
 	authUserId: number;
 	defaultProfilePhotoUrl = environment.defaultProfilePhotoUrl;

@@ -33,27 +33,15 @@
 
 	<img *ngIf="postResponse.imagePath" mat-card-image src="{{ postResponse.imagePath }}" alt="">
 
-	<mat-card-content class="mb-4">
-		<p class="p-2" *ngIf="isDetailedPost && postResponse.body.length > 0">
+	<mat-card-content class="">
+		<p class="p-2">
 			{{ postResponse.body }}
 		</p>
+		<ng-container *ngFor="let tag of postResponse.tags">
+      <div style="cursor: pointer; color: #0d6efd" class="text-decoration-none d-inline-block ms-0 mt-2 me-2 mb-0">#{{ tag.name }}</div>
+		</ng-container>
 
-		<p class="p-2" *ngIf="!isDetailedPost && postResponse.body.length > 0">
-			{{ postResponse.body.length > 128 ? (postResponse.body | slice:0:128) + '...' :
-			postResponse.body }}
-		</p>
-
-		<a class="text-decoration-none fw-500" href="/posts/{{postResponse.id}}"
-			*ngIf="!isDetailedPost && postResponse.body.length > 128">
-			Xem
-		</a>
-
-		<div *ngIf="postResponse.post.postTags.length > 0">
-			<a *ngFor="let tag of postResponse.post.postTags" href="/posts/tags/{{ tag.name }}"
-			 class="text-decoration-none d-inline-block ms-0 mt-2 me-2 mb-0">#{{ tag.name }}</a>
-		</div>
-
-		<div *ngIf="postResponse.post.isTypeShare" class="mt-3 p-3 border border-1 rounded">
+		<!-- <div *ngIf="postResponse.post.isTypeShare" class="mt-3 p-3 border border-1 rounded">
 			<div *ngIf="!postResponse.post.sharedPost">
 				<span class="badge rounded-pill bg-secondary">Bài chia sẻ đã bị xóa</span>
 			</div>
@@ -91,7 +79,7 @@
 					</a>
 				</div>
 			</div>
-		</div>
+		</div> -->
 
 	</mat-card-content>
 
@@ -102,7 +90,7 @@
 			style="padding: 4px 10px !important; min-height: 28px;" (click)="openLikeDialog()">
 			Yêu thích
 			<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
-				{{ postResponse.post.likeCount }}
+				{{ postResponse?.post?.likeCount ? postResponse?.post?.likeCount : 0 }}
 			</span>
 		</mat-chip>
 
@@ -110,18 +98,18 @@
 			style="padding: 4px 10px !important; min-height: 28px;" (click)="openCommentDialog()">
 			Bình luận
 			<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
-				{{ postResponse.post.commentCount }}
+				{{ postResponse?.post?.comments?.length ? postResponse?.post?.comments?.length : 0 }}
 			</span>
 		</mat-chip>
 
-		<mat-chip class="cursor-pointer"
+		<!-- <mat-chip class="cursor-pointer"
 			*ngIf="!postResponse.post.isTypeShare" style="padding: 4px 10px !important; min-height: 28px;"
 			(click)="openShareDialog()">
 			Chia sẻ
 			<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
 				{{ postResponse.post.shareCount }}
 			</span>
-		</mat-chip>
+		</mat-chip> -->
 	</mat-chip-list>
 
 	<mat-card-actions align="end" style="margin-top: -50px !important; padding-bottom: 20px;">
@@ -130,8 +118,8 @@
 			<mat-icon [ngClass]="postResponse.likedByAuthUser ? 'text-danger' : 'text-secondary'">favorite</mat-icon>
 		</button>
 
-		<button mat-icon-button matTooltip="Share" *ngIf="!postResponse.post.isTypeShare || postResponse.post.sharedPost" (click)="openShareConfirmDialog()">
+		<!-- <button mat-icon-button matTooltip="Share" *ngIf="!postResponse.post.isTypeShare || postResponse.post.sharedPost" (click)="openShareConfirmDialog()">
 			<mat-icon class="text-secondary">share</mat-icon>
-		</button>
+		</button> -->
 	</mat-card-actions>
 </mat-card>

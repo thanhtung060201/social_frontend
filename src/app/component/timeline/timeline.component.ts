@@ -121,23 +121,23 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	loadTimelineTags(): void {
     this.loadingTimelineTagsInitially = false;
-		// this.fetchingResult = true;
-		// this.subscriptions.push(
-		// 	this.timelineService.getTimelineTags().subscribe({
-		// 		next: (tagList: Tag[]) => {
-		// 			tagList.forEach(t => this.timelineTagList.push(t));
-		// 			this.loadingTimelineTagsInitially = false;
-		// 			this.fetchingResult = false;
-		// 		},
-		// 		error: (errorResponse: HttpErrorResponse) => {
-		// 			this.matSnackbar.openFromComponent(SnackbarComponent, {
-		// 				data: AppConstants.snackbarErrorContent,
-		// 				panelClass: ['bg-danger'],
-		// 				duration: 5000
-		// 			});
-		// 			this.fetchingResult = false;
-		// 		}
-		// 	})
-		// );
+		this.fetchingResult = true;
+		this.subscriptions.push(
+			this.timelineService.getTimelineTags().subscribe({
+				next: (tagList: Tag[]) => {
+					tagList.forEach(t => this.timelineTagList.push(t));
+					this.loadingTimelineTagsInitially = false;
+					this.fetchingResult = false;
+				},
+				error: (errorResponse: HttpErrorResponse) => {
+					this.matSnackbar.openFromComponent(SnackbarComponent, {
+						data: AppConstants.snackbarErrorContent,
+						panelClass: ['bg-danger'],
+						duration: 5000
+					});
+					this.fetchingResult = false;
+				}
+			})
+		);
 	}
 }
