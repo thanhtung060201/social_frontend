@@ -6,7 +6,8 @@ export const environment = {
 	production: false,
 	apiUrl: 'http://localhost:3000/api',
 	defaultProfilePhotoUrl: 'http://localhost:4200/assets/images/avatar.jpg',
-	defaultCoverPhotoUrl: 'http://localhost:4200/assets/images/cover.jpg'
+	defaultCoverPhotoUrl: 'http://localhost:4200/assets/images/cover.jpg',
+  defaultProfilePhoto: 'avatar.jpg'
 };
 
 /*

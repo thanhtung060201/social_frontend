@@ -16,6 +16,8 @@ import { FollowingFollowerListDialogComponent } from '../following-follower-list
 import { PhotoUploadDialogComponent } from '../photo-upload-dialog/photo-upload-dialog.component';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
 import { ViewPhotoDialogComponent } from '../view-photo-dialog/view-photo-dialog.component';
+import { PostService } from 'src/app/service/post.service';
+import { TimelineService } from 'src/app/service/timeline.service';
 
 @Component({
 	selector: 'app-profile',
@@ -25,8 +27,8 @@ import { ViewPhotoDialogComponent } from '../view-photo-dialog/view-photo-dialog
 export class ProfileComponent implements OnInit, OnDestroy {
 	authUser: User;
 	profileUserId: number;
-	profileUser: User;
-	profileUserPostResponses: PostResponse[] = [];
+	profileUser: any;
+	profileUserPostResponses: any[] = [];
 	isProfileViewerOwner: boolean = false;
 	viewerFollowsProfileUser: boolean = false;
 	resultPage: number = 1;
@@ -44,7 +46,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private matDialog: MatDialog,
-		private matSnackbar: MatSnackBar) { }
+		private matSnackbar: MatSnackBar,
+    private timelineService: TimelineService
+  ) { }
 
 	ngOnInit(): void {
 		if (!this.authService.isUserLoggedIn()) {
@@ -63,26 +67,25 @@ export class ProfileComponent implements OnInit, OnDestroy {
 			this.subscriptions.push(
 				this.userService.getUserById(this.profileUserId).subscribe({
 					next: (foundUserResponse: UserResponse) => {
-						console.log(foundUserResponse);
-						const foundUser: User = foundUserResponse.user;
+						const foundUser: any = foundUserResponse;
 
 						if (foundUser.id === this.authUser.id) {
 							this.router.navigateByUrl('/profile');
 						}
 
-						this.viewerFollowsProfileUser = foundUserResponse.followedByAuthUser;
+						// this.viewerFollowsProfileUser = foundUserResponse.followedByAuthUser;
 
-						if (!foundUser.profilePhoto) {
-							foundUser.profilePhoto = environment.defaultProfilePhotoUrl
+						if (!foundUser.imagePath) {
+							foundUser.imagePath = environment.defaultProfilePhoto
 						}
-				
+
 						if (!foundUser.coverPhoto) {
 							foundUser.coverPhoto = environment.defaultCoverPhotoUrl
 						}
 
 						this.profileUser = foundUser;
 
-						this.loadProfilePosts(1);
+						this.loadProfilePosts();
 
 						this.loadingProfile = false;
 					},
@@ -98,7 +101,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 			);
 		}
 
-		
+
 	}
 
 	ngOnDestroy(): void {
@@ -109,17 +112,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		e.stopPropagation();
 	}
 
-	loadProfilePosts(currentPage: number): void {
+	loadProfilePosts(): void {
 		if (!this.fetchingResult) {
 			this.fetchingResult = true;
 			this.subscriptions.push(
-				this.userService.getUserPosts(this.profileUserId, currentPage, this.resultSize).subscribe({
+				this.timelineService.getTimelinePosts().subscribe({
 					next: (postResponses: PostResponse[]) => {
 						postResponses.forEach(post => this.profileUserPostResponses.push(post));
-						if (postResponses.length <= 0 && this.resultPage === 1)  this.hasNoPost = true;
-						if (postResponses.length <= 0) this.hasMoreResult = false;
+						if (postResponses.length === 0)  this.hasNoPost = true;
 						this.fetchingResult = false;
-						this.resultPage++;
 					},
 					error: (errorResponse: HttpErrorResponse) => {
 						this.matSnackbar.openFromComponent(SnackbarComponent, {
@@ -236,13 +237,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
 		let header: string;
 		if (uploadType === 'profilePhoto') {
-			header = 'Upload Profile Photo';
-		} else if (uploadType === 'coverPhoto') {
-			header = 'Upload Cover Photo';
+			header = 'Upload Ảnh đại diện';
 		}
 
 		const dialogRef = this.matDialog.open(PhotoUploadDialogComponent, {
-			data: { authUser: this.authUser, uploadType, header },
+			data: { authUser: this.profileUser, uploadType, header },
 			autoFocus: false,
 			minWidth: '300px',
 			maxWidth: '900px',
@@ -251,11 +250,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
 		dialogRef.afterClosed().subscribe(result => {
 			if (result) {
-				if (uploadType === 'profilePhoto') {
-					this.profileUser.profilePhoto = result.updatedUser.profilePhoto;
-				} else if (uploadType === 'coverPhoto') {
-					this.profileUser.coverPhoto = result.updatedUser.coverPhoto;
-				}
+        this.profileUser.imagePath = result;
 			}
 		});
 	}

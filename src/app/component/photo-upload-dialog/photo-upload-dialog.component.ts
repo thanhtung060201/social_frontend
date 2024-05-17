@@ -12,99 +12,83 @@ import { environment } from 'src/environments/environment';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
 
 @Component({
-	selector: 'app-photo-upload-dialog',
-	templateUrl: './photo-upload-dialog.component.html',
-	styleUrls: ['./photo-upload-dialog.component.css']
+  selector: 'app-photo-upload-dialog',
+  templateUrl: './photo-upload-dialog.component.html',
+  styleUrls: ['./photo-upload-dialog.component.css']
 })
 export class PhotoUploadDialogComponent implements OnInit {
-	photoPreviewUrl: string;
-	photo: File;
-	defaultProfilePhotoUrl: string = environment.defaultProfilePhotoUrl;
-	defaultCoverPhotoUrl: string = environment.defaultCoverPhotoUrl;
+  photoPreviewUrl: string;
+  photo: File;
+  defaultProfilePhotoUrl: string = environment.defaultProfilePhotoUrl;
+  defaultCoverPhotoUrl: string = environment.defaultCoverPhotoUrl;
+  defaultProfilePhoto: string = environment.defaultProfilePhoto;
 
-	private subscriptions: Subscription[] = [];
+  private subscriptions: Subscription[] = [];
 
-	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: any,
-		private authService: AuthService,
-		private userService: UserService,
-		private thisDialogRef: MatDialogRef<PhotoUploadDialogComponent>,
-		private matSnackbar: MatSnackBar) { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private authService: AuthService,
+    private userService: UserService,
+    private thisDialogRef: MatDialogRef<PhotoUploadDialogComponent>,
+    private matSnackbar: MatSnackBar) { }
 
-	ngOnInit(): void {
-		if (this.data.uploadType === 'profilePhoto') {
-			this.photoPreviewUrl = this.data.authUser.profilePhoto ? this.data.authUser.profilePhoto : this.defaultProfilePhotoUrl;
-		} else if (this.data.uploadType === 'coverPhoto') {
-			this.photoPreviewUrl = this.data.authUser.coverPhoto ? this.data.authUser.coverPhoto : this.defaultCoverPhotoUrl;
-		}
-	}
+  ngOnInit(): void {
+    this.photoPreviewUrl = this.data.authUser.imagePath ? this.data.authUser.imagePath : this.defaultProfilePhoto;
+  }
 
-	ngOnDestroy(): void {
-		this.subscriptions.forEach(sub => sub.unsubscribe());
-	}
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
 
-	previewPhoto(e: any): void {
-		if (e.target.files) {
-			this.photo = e.target.files[0];
-			const reader = new FileReader();
-			reader.readAsDataURL(this.photo);
-			reader.onload = (e: any) => {
-				this.photoPreviewUrl = e.target.result;
-			}
-		}
-	}
+  previewPhoto(e: any): void {
+    if (e.target.files) {
+      this.photo = e.target.files[0];
+      this.userService.updateImageByUserId(this.photo).subscribe((data) => {
+        this.photoPreviewUrl = data.modifiedFileName;
+      });
+      // const reader = new FileReader();
+      // reader.readAsDataURL(this.photo);
+      // reader.onload = (e: any) => {
+      // 	this.photoPreviewUrl = e.target.result;
+      // }
+    }
+  }
 
-	savePhoto(): void {
-		if (this.photo) {
-			if (this.data.uploadType === 'profilePhoto') {
-				this.subscriptions.push(
-					this.userService.updateProfilePhoto(this.photo).subscribe({
-						next: (updatedUser: User) => {
-							this.authService.storeAuthUserInCache(updatedUser);
-							this.photoPreviewUrl = null;
-							this.matSnackbar.openFromComponent(SnackbarComponent, {
-								data: 'Profile photo updated successfully.',
-								duration: 5000
-							});
-							this.thisDialogRef.close({ updatedUser });
-						},
-						error: (errorResponse: HttpErrorResponse) => {
-							this.matSnackbar.openFromComponent(SnackbarComponent, {
-								data: AppConstants.snackbarErrorContent,
-								panelClass: ['bg-danger'],
-								duration: 5000
-							});
-						}
-					})
-				);
-			} else if (this.data.uploadType === 'coverPhoto') {
-				this.subscriptions.push(
-					this.userService.updateCoverPhoto(this.photo).subscribe({
-						next: (updatedUser: User) => {
-							this.authService.storeAuthUserInCache(updatedUser);
-							this.photoPreviewUrl = null;
-							this.matSnackbar.openFromComponent(SnackbarComponent, {
-								data: 'Cover photo updated successfully.',
-								duration: 5000
-							});
-							this.thisDialogRef.close({ updatedUser });
-						},
-						error: (errorResponse: HttpErrorResponse) => {
-							this.matSnackbar.openFromComponent(SnackbarComponent, {
-								data: AppConstants.snackbarErrorContent,
-								panelClass: ['bg-danger'],
-								duration: 5000
-							});
-						}
-					})
-				);
-			}
-		} else {
-			this.matSnackbar.openFromComponent(SnackbarComponent, {
-				data: 'Please, first upload a photo to save.',
-				panelClass: ['bg-danger'],
-				duration: 5000
-			});
-		}
-	};
+  savePhoto(): void {
+    if (this.photo) {
+      this.thisDialogRef.close(this.photoPreviewUrl);
+      this.matSnackbar.openFromComponent(SnackbarComponent, {
+        data: 'Cập nhật ảnh đại diện thành công.',
+        duration: 5000
+      });
+      // if (this.data.uploadType === 'profilePhoto') {
+      //   this.subscriptions.push(
+      //   	this.userService.updateProfilePhoto(this.photo).subscribe({
+      //   		next: (updatedUser: User) => {
+      //   			this.authService.storeAuthUserInCache(updatedUser);
+      //   			this.photoPreviewUrl = null;
+      //   			this.matSnackbar.openFromComponent(SnackbarComponent, {
+      //   				data: 'Cập nhật ảnh đại diện thành công.',
+      //   				duration: 5000
+      //   			});
+      //   			this.thisDialogRef.close(this.photoPreviewUrl);
+      //   		},
+      //   		error: (errorResponse: HttpErrorResponse) => {
+      //   			this.matSnackbar.openFromComponent(SnackbarComponent, {
+      //   				data: AppConstants.snackbarErrorContent,
+      //   				panelClass: ['bg-danger'],
+      //   				duration: 5000
+      //   			});
+      //   		}
+      //   	})
+      //   );
+      // }
+    } else {
+      this.matSnackbar.openFromComponent(SnackbarComponent, {
+        data: 'Vui lòng tải ảnh lên trước để lưu.',
+        panelClass: ['bg-danger'],
+        duration: 5000
+      });
+    }
+  };
 }

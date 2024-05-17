@@ -25,6 +25,12 @@ export class UserService {
 		return this.httpClient.get<UserResponse | HttpErrorResponse>(`${this.host}/user/${userId}`);
 	}
 
+  updateImageByUserId(fileImage: any) {
+		const formData = new FormData();
+		formData.append('file', fileImage);
+		return this.httpClient.post<any>(`${this.host}/user/upload`, formData);
+	}
+
 	getUserFollowingList(userId: number, page: number, size: number): Observable<UserResponse[] | HttpErrorResponse> {
 		const reqParams = new HttpParams().set('page', page).set('size', size);
 		return this.httpClient.get<UserResponse[] | HttpErrorResponse>(`${this.host}/users/${userId}/following`, { params: reqParams });
