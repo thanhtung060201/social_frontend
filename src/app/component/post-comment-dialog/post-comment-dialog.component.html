@@ -10,7 +10,7 @@
 			class="position-relative">
 			<mat-form-field appearance="outline" class="w-100" style="padding-right: 90px;">
 				<mat-label>Bình luận</mat-label>
-				<textarea matInput formControlName="content" placeholder="Post new comment"></textarea>
+				<textarea matInput formControlName="content" placeholder="Nhập bình luận"></textarea>
 				<mat-error *ngIf="content.hasError('required') && commentForm.submitted">
 					Vui lòng nhập bình luận của bạn
 				</mat-error>

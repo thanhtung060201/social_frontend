@@ -158,6 +158,7 @@ export class PostDialogComponent implements OnInit, OnDestroy {
 						});
 						this.creatingPost = false;
 						this.postPhoto = null;
+            this.router.navigateByUrl(`/posts/${createdPost.id}`);
 						// this.router.navigateByUrl(`/posts/${createdPost.id}`).then(() => {
 						// 	window.location.reload();
 						// });
@@ -176,12 +177,21 @@ export class PostDialogComponent implements OnInit, OnDestroy {
 	}
 
 	private updatePost(): void {
+    const dataTagsSave = [...this.postTags.map((tag: any) => tag.tagName)];
 		this.subscriptions.push(
-			this.postService.updatePost(this.dataPost.id, this.content.value, this.postPhoto, this.postTags).subscribe({
-				next: (createdPost: Post) => {
+			this.postService.updatePost({ ...this.dataPost, imagePath: this.postPhoto ? this.postPhoto : this.dataPost.imagePath, body: this.content.value, tags: dataTagsSave }).subscribe({
+				next: (createdPost: any) => {
+          if (this.postPhoto) {
+            this.postService.updateImageByPostId(createdPost.id, this.postPhoto).subscribe();
+          }
+          if(createdPost.tags.length) {
+            createdPost.tags.forEach((tag: any) => {
+              this.postService.createTag(createdPost.id, tag).subscribe();
+            })
+          }
 					this.matDialogRef.close();
 					this.matSnackbar.openFromComponent(SnackbarComponent, {
-						data: 'Post updated successfully.',
+						data: 'Cập nhật bài viết thành công',
 						duration: 5000
 					});
 					this.router.navigateByUrl(`/posts/${createdPost.id}`);

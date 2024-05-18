@@ -16,17 +16,33 @@ export class PostService {
 
 	constructor(private httpClient: HttpClient) { }
 
+  getPostById(postId: number): Observable<PostResponse | HttpErrorResponse> {
+		return this.httpClient.get<PostResponse | HttpErrorResponse>(`${this.host}/newfeed/${postId}`);
+	}
+
 	createNewPost(content: string, tags: any): Observable<Post | HttpErrorResponse> {
 		// const formData = new FormData();
 		// formData.append('content', content);
 		// formData.append('postPhoto', postPhoto);
 		// formData.append('postTags', JSON.stringify(postTags));
-		return this.httpClient.post<Post | HttpErrorResponse>(`${this.host}/newfeed`, { 
+		return this.httpClient.post<Post | HttpErrorResponse>(`${this.host}/newfeed`, {
 			post: {
 				body: content
 			},
 			tags: tags
-		 });
+		});
+	}
+
+  updatePost(post: any): Observable<any | HttpErrorResponse> {
+		// const formData = new FormData();
+  // formData.append('content', content);
+		// formData.append('postPhoto', postPhoto);
+		// formData.append('postTags', JSON.stringify(postTags));
+		return this.httpClient.put<Post | HttpErrorResponse>(`${this.host}/newfeed/${post.id}`, post);
+	}
+
+  deletePost(postId: any, post: any) {
+		return this.httpClient.delete<any>(`${this.host}/newfeed/delete/${postId}`);
 	}
 
 	updateImageByPostId(id: string, fileImage: any) {
@@ -42,20 +58,8 @@ export class PostService {
 		});
 	}
 
-	deletePost(postId: any, post: any) {
-		return this.httpClient.put<any>(`${this.host}/newfeed/delete/${postId}`, post);
-	}
-
 	getImageNameByPostId(postId: number) {
 		return this.httpClient.get<any>(`${this.host}/newfeed/image-name/${postId}`);
-	}
-
-	updatePost(postId: number, content: string, postPhoto: File, postTags: any[]): Observable<Post | HttpErrorResponse> {
-		const formData = new FormData();
-		formData.append('content', content);
-		formData.append('postPhoto', postPhoto);
-		formData.append('postTags', JSON.stringify(postTags));
-		return this.httpClient.post<Post | HttpErrorResponse>(`${this.host}/posts/${postId}/update`, formData);
 	}
 
 	deletePostPhoto(postId: number): Observable<any | HttpErrorResponse> {
@@ -69,10 +73,6 @@ export class PostService {
 	// 		return this.httpClient.post<any | HttpErrorResponse>(`${this.host}/posts/${postId}/delete`, null);
 	// 	}
 	// }
-
-	getPostById(postId: number): Observable<PostResponse | HttpErrorResponse> {
-		return this.httpClient.get<PostResponse | HttpErrorResponse>(`${this.host}/posts/${postId}`);
-	}
 
 	getPostLikes(postId: number, page: number, size: number): Observable<User[] | HttpErrorResponse> {
 		const reqParams = new HttpParams().set('page', page).set('size', size);

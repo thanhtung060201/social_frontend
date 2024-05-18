@@ -1,24 +1,24 @@
 <mat-dialog-content >
 	<div class="position-relative">
 		<h2 class="mat-h2 m-0">
-			Find Someone
+			Tìm kiếm bạn bè
 		</h2>
-	
+
 		<hr class="divider">
-	
+
 		<form [formGroup]="searchUserFormGroup" class="position-relative" autocomplete="off" (ngSubmit)="searchUser(1)">
 			<mat-form-field appearance="outline" class="w-100" style="padding-right: 90px;">
-				<mat-label>Who do you want to find?</mat-label>
-				<input matInput formControlName="key" placeholder="Who do you want to find?">
+				<mat-label>Nhập tên người bạn muốn tìm</mat-label>
+				<input matInput formControlName="key" placeholder="Nhập tên người bạn muốn tìm">
 				<mat-error *ngIf="key.hasError('minlength') || key.hasError('maxlength')">
-					Must be 3 to 64 characters
+					Phải có từ 3 đến 64 ký tự
 				</mat-error>
 			</mat-form-field>
 
 			<button mat-raised-button color="primary" type="submit" class="position-absolute"
-			style="top: 4px; right: 0;">Search</button>
+			style="top: 4px; right: 0;">Tìm kiếm</button>
 		</form>
-	
+
 		<div *ngIf="!noResult">
 			<ul class="list-group list-group-flush">
 				<li class="list-group-item ps-0 pt-2 pe-0 pb-2 border border-1 border-start-0 border-bottom-0 border-end-0" *ngFor="let userResponse of searchResult">
@@ -28,7 +28,7 @@
 
 					<a class="d-inline-block text-decoration-none text-dark align-middle ps-2 fw-500 cursor-pointer"
 						href="/users/{{userResponse.user.id}}">{{userResponse.user.firstName + ' ' + userResponse.user.lastName}}</a>
-					
+
 					<button mat-stroked-button color="primary" class="float-end rounded-pill" *ngIf="!userResponse.followedByAuthUser" (click)="openFollowConfirmDialog(userResponse)">Follow</button>
 					<button mat-stroked-button color="warn" class="float-end rounded-pill" *ngIf="userResponse.followedByAuthUser" (click)="openUnfollowConfirmDialog(userResponse)">Unfollow</button>
 				</li>
@@ -47,7 +47,7 @@
 		<div *ngIf="noResult" class="text-center">
 			No user found.
 		</div>
-	
+
 		<div *ngIf="fetchingResult && resultPage === 1" class="position-absolute" style="transform: scale(0.3); top: -35px; right: -35px;">
 			<mat-spinner></mat-spinner>
 		</div>

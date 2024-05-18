@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { noop, Subscription } from 'rxjs';
@@ -35,7 +35,9 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		private postService: PostService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
-		private matSnackbar: MatSnackBar) { }
+		private matSnackbar: MatSnackBar,
+    private cd: ChangeDetectorRef
+  ) { }
 
 	ngOnInit(): void {
 		if (!this.authService.isUserLoggedIn()) {
@@ -65,7 +67,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
 					next: (postResponseList: any[]) => {
 						if (!postResponseList.length) this.noPost = true;
 
-						postResponseList.forEach(pR => this.timelinePostResponseList.push(pR));
+						// postResponseList.forEach(pR => this.timelinePostResponseList.push(pR));
+            this.timelinePostResponseList = [...postResponseList];
 
 						// if (postResponseList.length > 0) {
 						// 	this.hasMoreResult = true;
@@ -75,6 +78,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 						// this.fetchingResult = false;
 						this.loadingTimelinePostsInitially = false;
+            this.cd.detectChanges();
 					},
 					error: (errorResponse: HttpErrorResponse) => {
 						this.matSnackbar.openFromComponent(SnackbarComponent, {

@@ -18,8 +18,8 @@
 				</mat-error>
 			</mat-form-field>
 
-			<div *ngIf="postPhotoPreviewUrl" class="pb-3">
-				<img [src]="postPhotoPreviewUrl" alt="" style="max-width: 100%;">
+			<div *ngIf="dataPost && dataPost.imagePath" class="pb-3">
+				<img src="assets/images/{{dataPost.imagePath}}" alt="" style="max-width: 100%;">
 			</div>
 
 			<div>

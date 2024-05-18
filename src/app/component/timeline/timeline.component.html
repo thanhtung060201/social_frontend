@@ -27,7 +27,7 @@
 
 				<div class="timeline-posts">
 					<p class="fw-500 text-center" *ngIf="noPost">No Post Found</p>
-					<app-post *ngFor="let postResponse of timelinePostResponseList" id="{{'profilePost' + postResponse.id}}" [postResponse]="postResponse"></app-post>
+					<app-post *ngFor="let postResponse of timelinePostResponseList" id="{{'profilePost' + postResponse.id}}" [postResponse]="postResponse" (postDeletedEvent)="loadTimelinePosts()"></app-post>
 				</div>
 
 				<!-- <div class="text-center mb-4">
