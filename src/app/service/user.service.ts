@@ -50,8 +50,11 @@ export class UserService {
 		return this.httpClient.post<HttpResponse<any> | HttpErrorResponse>(`${this.host}/verify-email/${token}`, null);
 	}
 
-	updateUserInfo(updateUserInfo: UpdateUserInfo): Observable<User | HttpErrorResponse> {
-		return this.httpClient.post<User | HttpErrorResponse>(`${this.host}/account/update/info`, updateUserInfo);
+	updateUserInfo(userId: any, updateUserInfo: any): Observable<User | HttpErrorResponse> {
+		return this.httpClient.put<User | HttpErrorResponse>(`${this.host}/user/${userId}`, {
+      ...updateUserInfo,
+      id: userId
+    });
 	}
 
 	updateUserEmail(updateUserEmail: UpdateUserEmail): Observable<any | HttpErrorResponse> {

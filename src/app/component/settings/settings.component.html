@@ -8,10 +8,10 @@
 							<form [formGroup]="updateInfoFormGroup" (ngSubmit)="handleUpdateInfo()">
 								<mat-form-field class="w-100 pb-2" appearance="outline">
 									<mat-label>Hãy nói vài điều gì đó về bạn</mat-label>
-									<textarea matInput formControlName="intro" placeholder="ãy nói vài điều gì đó về bạn" cdkTextareaAutosize
+									<textarea matInput formControlName="description" placeholder="Hãy nói vài điều gì đó về bạn" cdkTextareaAutosize
 										cdkAutosizeMinRows="2" cdkAutosizeMaxRows="5">
 									</textarea>
-									<mat-error *ngIf="updateInfoIntro.hasError('maxlength') || updateInfoIntro.hasError('serverError')">
+									<mat-error *ngIf="updateInfoFormGroup.controls['description'].hasError('maxlength') || updateInfoFormGroup.controls['description'].hasError('serverError')">
 										Không thể vượt quá 100 ký tự
 									</mat-error>
 								</mat-form-field>
@@ -19,7 +19,7 @@
 								<mat-form-field class="w-100 pb-2" appearance="outline">
 									<mat-label>Tên</mat-label>
 									<input type="text" matInput formControlName="firstName" placeholder="Ex. John">
-									<mat-error *ngIf="updateInfoFirstName.hasError('required') || updateInfoFirstName.hasError('maxlength') || updateInfoFirstName.hasError('serverError')">
+									<mat-error *ngIf="updateInfoFormGroup.controls['firstName'].hasError('required') || updateInfoFormGroup.controls['firstName'].hasError('maxlength') || updateInfoFormGroup.controls['firstName'].hasError('serverError')">
 										Trường này là bắt buộc và không thể vượt quá 64 ký tự
 									</mat-error>
 								</mat-form-field>
@@ -27,33 +27,33 @@
 								<mat-form-field class="w-100 pb-2" appearance="outline">
 									<mat-label>Họ</mat-label>
 									<input type="text" matInput formControlName="lastName" placeholder="Ex. Doe">
-									<mat-error *ngIf="updateInfoLastName.hasError('required') || updateInfoLastName.hasError('maxlength') || updateInfoLastName.hasError('serverError')">
+									<mat-error *ngIf="updateInfoFormGroup.controls['lastName'].hasError('required') || updateInfoFormGroup.controls['lastName'].hasError('maxlength') || updateInfoFormGroup.controls['lastName'].hasError('serverError')">
 										Trường này là bắt buộc và không thể vượt quá 64 ký tự
 									</mat-error>
 								</mat-form-field>
 
 								<mat-form-field class="w-100 pb-2" appearance="outline">
 									<mat-label>Địa chỉ</mat-label>
-									<input type="text" matInput formControlName="currentCity" placeholder="Ex. Dhaka">
-									<mat-error *ngIf="updateInfoCurrentCity.hasError('maxlength') || updateInfoCurrentCity.hasError('serverError')">
+									<input type="text" matInput formControlName="address" placeholder="Ex. Dhaka">
+									<mat-error *ngIf="updateInfoFormGroup.controls['address'].hasError('maxlength') || updateInfoFormGroup.controls['address'].hasError('serverError')">
 										Không thể vượt quá 128 ký tự
 									</mat-error>
 								</mat-form-field>
 
 								<mat-form-field class="w-100 pb-2" appearance="outline">
 									<mat-label>Học vấn</mat-label>
-									<input type="text" matInput formControlName="eduInstitution" placeholder="Ex. University of XYZ">
-									<mat-error *ngIf="updateInfoEduInstitution.hasError('maxlength') || updateInfoEduInstitution.hasError('serverError')">
+									<input type="text" matInput formControlName="education" placeholder="Ex. University of XYZ">
+									<mat-error *ngIf="updateInfoFormGroup.controls['education'].hasError('maxlength') || updateInfoFormGroup.controls['education'].hasError('serverError')">
 										Không thể vượt quá 128 ký tự
 									</mat-error>
 								</mat-form-field>
 
 								<mat-form-field appearance="outline" class="d-block pb-2">
 									<mat-label>Ngày sinh</mat-label>
-									<input formControlName="birthDate" matInput [matDatepicker]="birthDatePicker">
+									<input formControlName="dob" matInput [matDatepicker]="birthDatePicker">
 									<mat-datepicker-toggle matSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
 									<mat-datepicker touchUi #birthDatePicker></mat-datepicker>
-									<mat-error *ngIf="updateInfoBirthDate.hasError('serverError')">
+									<mat-error *ngIf="updateInfoFormGroup.controls['dob'].hasError('serverError')">
 										Ngày sinh không hợp lệ
 									</mat-error>
 								</mat-form-field>
@@ -61,7 +61,7 @@
 								<mat-radio-group formControlName="gender" class="d-block mb-2">
 									<mat-radio-button value="Male" class="me-3">Nam</mat-radio-button>
 									<mat-radio-button value="Female">Nữ</mat-radio-button>
-									<mat-error *ngIf="updateInfoGender.hasError('serverError')">
+									<mat-error *ngIf="updateInfoFormGroup.controls['gender'].hasError('serverError')">
 										Giới tính không hợp lệ
 									</mat-error>
 								</mat-radio-group>
@@ -83,26 +83,26 @@
                 <mat-form-field class="w-100 pb-3" appearance="outline">
 									<mat-label>Mật khẩu cũ</mat-label>
 									<input type="password" matInput formControlName="oldPassword" placeholder="*************">
-									<mat-error *ngIf="updatePasswordOldPassword.hasError('required')">
+									<mat-error *ngIf="updatePasswordFormGroup.controls['oldPassword'].hasError('required')">
 										Mật khẩu cũ là bắt buộc
 									</mat-error>
-									<mat-error *ngIf="updatePasswordOldPassword.hasError('minlength', 'maxlength')">
+									<mat-error *ngIf="updatePasswordFormGroup.controls['oldPassword'].hasError('minlength', 'maxlength')">
 										Mật khẩu phải dài từ 6 đến 32 ký tự
 									</mat-error>
-									<mat-error *ngIf="updatePasswordOldPassword.hasError('serverError')">
+									<mat-error *ngIf="updatePasswordFormGroup.controls['oldPassword'].hasError('serverError')">
 										Mật khẩu phải là số và phải bao gồm chữ hoa, chữ thường và ký tự đặc biệt
 									</mat-error>
 								</mat-form-field>
 								<mat-form-field class="w-100 pb-2" appearance="outline">
 									<mat-label>Mật khẩu mới</mat-label>
 									<input type="password" matInput formControlName="password" placeholder="*************">
-									<mat-error *ngIf="updatePasswordNewPassword.hasError('required')">
+									<mat-error *ngIf="updatePasswordFormGroup.controls['password'].hasError('required')">
 										Mật khẩu là bắt buộc
 									</mat-error>
-									<mat-error *ngIf="updatePasswordNewPassword.hasError('minlength', 'maxlength')">
+									<mat-error *ngIf="updatePasswordFormGroup.controls['password'].hasError('minlength', 'maxlength')">
 										Mật khẩu phải dài từ 6 đến 32 ký tự
 									</mat-error>
-									<mat-error *ngIf="updatePasswordNewPassword.hasError('serverError')">
+									<mat-error *ngIf="updatePasswordFormGroup.controls['password'].hasError('serverError')">
 										Mật khẩu phải là số và phải bao gồm chữ hoa, chữ thường và ký tự đặc biệt
 									</mat-error>
 								</mat-form-field>
@@ -110,10 +110,10 @@
 								<mat-form-field class="w-100 pb-2" appearance="outline">
 									<mat-label>Nhập lại mật khẩu</mat-label>
 									<input type="password" matInput formControlName="passwordRepeat" placeholder="*************" [errorStateMatcher]="repeatPasswordMatcher">
-									<mat-error *ngIf="updatePasswordPasswordRepeat.hasError('required')">
+									<mat-error *ngIf="updatePasswordFormGroup.controls['passwordRepeat'].hasError('required')">
 										Nhập lại mật khẩu là bắt buộc
 									</mat-error>
-									<mat-error *ngIf="updatePasswordFormGroup.hasError('passwordMissMatch') || updatePasswordPasswordRepeat.hasError('serverError')">
+									<mat-error *ngIf="updatePasswordFormGroup.hasError('passwordMissMatch') || updatePasswordFormGroup.controls['passwordRepeat'].hasError('serverError')">
 										Mật khẩu không khớp
 									</mat-error>
 								</mat-form-field>

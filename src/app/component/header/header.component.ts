@@ -13,6 +13,7 @@ import { environment } from 'src/environments/environment';
 import { PostDialogComponent } from '../post-dialog/post-dialog.component';
 import { SearchDialogComponent } from '../search-dialog/search-dialog.component';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
+import { UserService } from 'src/app/service/user.service';
 
 @Component({
 	selector: 'app-header',
@@ -20,7 +21,7 @@ import { SnackbarComponent } from '../snackbar/snackbar.component';
 	styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-	authUser: User;
+	authUser: any;
 	isUserLoggedIn: boolean = false;
 	isProfilePage: boolean = false;
 	notifications: Notification[] = [];
@@ -30,6 +31,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	hasMoreNotifications: boolean = false;
 	fetchingResult: boolean = false;
 	defaultProfilePhotoUrl = environment.defaultProfilePhotoUrl;
+	defaultProfilePhoto = environment.defaultProfilePhoto;
 
 	private subscriptions: Subscription[] = [];
 
@@ -37,12 +39,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		private authService: AuthService,
 		private notificationService: NotificationService,
 		private matDialog: MatDialog,
-		private matSnackbar: MatSnackBar) { }
+		private matSnackbar: MatSnackBar,
+		private userService: UserService
+) { }
 
 	ngOnInit(): void {
+    console.log(this.authService.isUserLoggedIn());
 		if (this.authService.isUserLoggedIn()) {
 			this.isUserLoggedIn = true;
-			this.authUser = this.authService.getAuthUserFromCache();
+      this.userService.getUserById(this.authService.getAuthUserId()).subscribe((data) => {
+        this.authUser = data;
+        console.log(this.authUser);
+      });
 		} else {
 			this.isUserLoggedIn = false;
 		}

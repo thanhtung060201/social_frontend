@@ -27,6 +27,7 @@ export class PostComponent implements OnInit, OnDestroy {
 	@Output() postDeletedEvent = new EventEmitter<any>();
 	authUserId: number;
 	defaultProfilePhotoUrl = environment.defaultProfilePhotoUrl;
+	defaultProfilePhoto = environment.defaultProfilePhoto;
 
 	private subscriptions: Subscription[] = [];
 

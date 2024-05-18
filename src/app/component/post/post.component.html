@@ -1,7 +1,7 @@
 <mat-card class="position-relative mat-elevation-z3 mb-4" *ngIf="postResponse">
 	<mat-card-header>
 		<div mat-card-avatar class="centered-bg-image"
-			style="background-image: url('{{ postResponse.author.imagePath ? postResponse.author.imagePath : defaultProfilePhotoUrl }}');">
+			style="background-image: url('assets/images/{{ postResponse.author.imagePath ? postResponse.author.imagePath : defaultProfilePhoto }}');">
 		</div>
 		<mat-card-title>
 			<a href="/users/{{ postResponse.author.id }}" class="text-decoration-none text-dark">

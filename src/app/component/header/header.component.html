@@ -5,7 +5,7 @@
 
 	<a href="/profile" class="rounded-pill ps-2 pt-1 pe-3 pb-1 text-white text-decoration-none" *ngIf="isUserLoggedIn">
 		<span class="rounded-circle d-inline-block align-middle centered-bg-image"
-			style="width: 30px; height: 30px; background-color: white; background-image: url('{{authUser.profilePhoto ? authUser.profilePhoto : defaultProfilePhotoUrl}}');"></span>
+			style="width: 30px; height: 30px; background-color: white; background-image: url('assets/images/{{authUser?.imagePath ? authUser?.imagePath : defaultProfilePhoto}}');"></span>
 		<span class="mat-body-strong d-inline-block align-middle ps-2">{{ authUser?.firstName }}</span>
 	</a>
 

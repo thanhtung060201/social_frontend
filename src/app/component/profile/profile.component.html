@@ -56,8 +56,8 @@
 		<div class="row justify-content-center mt-5">
 			<div class="col-4">
 				<div class="profile-sidebar position-sticky bg-white rounded mat-elevation-z3 p-3 mb-5" style="top: 64px;">
-					<p class="text-center ps-2 pt-3 pe-2 pb-0" *ngIf="profileUser.intro">
-						{{ profileUser.intro }}
+					<p class="text-center ps-2 pt-3 pe-2 pb-0" *ngIf="profileUser.description">
+						{{ profileUser.description }}
 					</p>
 
 					<mat-list>
@@ -66,6 +66,8 @@
 								<mat-icon class="text-secondary">email</mat-icon>
 								<span class="fw-500 ps-3 small">Email <b>{{ profileUser.email }}</b></span>
 							</mat-list-item>
+
+              <mat-divider></mat-divider>
 						</div>
 
 						<!-- <div *ngIf="profileUser.workplace">
@@ -79,14 +81,14 @@
 							<mat-divider></mat-divider>
 						</div> -->
 
-						<!-- <div *ngIf="profileUser.eduInstitution">
+						<div *ngIf="profileUser.education">
 							<mat-list-item>
 								<mat-icon class="text-secondary">school</mat-icon>
-								<span class="fw-500 ps-3 small">Studied At <b>{{ profileUser.eduInstitution }}</b></span>
+								<span class="fw-500 ps-3 small"><b>{{ profileUser.education }}</b></span>
 							</mat-list-item>
 
 							<mat-divider></mat-divider>
-						</div> -->
+						</div>
 
 						<!-- <div *ngIf="profileUser.hometown">
 							<mat-list-item *ngIf="profileUser.hometown">
@@ -97,14 +99,14 @@
 							<mat-divider></mat-divider>
 						</div> -->
 
-						<!-- <div *ngIf="profileUser.currentCity">
+						<div *ngIf="profileUser.address">
 							<mat-list-item>
 								<mat-icon class="text-secondary">person_pin_circle</mat-icon>
-								<span class="fw-500 ps-3 small">Lives In <b>{{ profileUser.currentCity}}</b></span>
+								<span class="fw-500 ps-3 small"><b>{{ profileUser.address}}</b></span>
 							</mat-list-item>
 
 							<mat-divider></mat-divider>
-						</div> -->
+						</div>
 
 						<!-- <div *ngIf="profileUser.country">
 							<mat-list-item>
@@ -113,14 +115,23 @@
 							</mat-list-item>
 
 							<mat-divider></mat-divider>
+						</div> -->
+
+            <div *ngIf="profileUser.dob">
+							<mat-list-item>
+								<mat-icon class="text-secondary"><mat-icon>date_range</mat-icon></mat-icon>
+								<span class="fw-500 ps-3 small"><b>{{ profileUser.dob | date:'longDate' }}</b></span>
+							</mat-list-item>
+
+              <mat-divider></mat-divider>
 						</div>
 
 						<div *ngIf="profileUser.gender">
 							<mat-list-item>
 								<mat-icon class="text-secondary"><mat-icon>account_circle</mat-icon></mat-icon>
-								<span class="fw-500 ps-3 small">Gender <b>{{ profileUser.gender }}</b></span>
+								<span class="fw-500 ps-3 small"><b>{{ profileUser.gender === 'Male' ? 'Nam' : 'Nữ' }}</b></span>
 							</mat-list-item>
-						</div> -->
+						</div>
 					</mat-list>
 				</div>
 			</div>
