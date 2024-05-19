@@ -39,6 +39,10 @@ export class PostComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.authUserId = this.authService.getAuthUserId();
+		this.postResponse = {
+			...this.postResponse,
+			likedByAuthUser: this.postResponse.favorites.some((data) => data.userId === this.authUserId)
+		}
 	}
 
 	ngOnDestroy(): void {
@@ -61,8 +65,8 @@ export class PostComponent implements OnInit, OnDestroy {
 			maxWidth: '700px'
 		});
 
-		dialogRef.componentInstance.updatedCommentCountEvent.subscribe(
-			data => this.postResponse.commentCount = data
+		dialogRef.componentInstance.updatedCommentEvent.subscribe(
+			data => this.postDeletedEvent.emit()
 		);
 	}
 
@@ -139,11 +143,11 @@ export class PostComponent implements OnInit, OnDestroy {
 
 	likeOrUnlikePost(likedByAuthUser: boolean) {
 		if (likedByAuthUser) {
+      const favoriteId = this.postResponse.favorites.filter((data) => data.userId === this.authUserId)[0].id;
 			this.subscriptions.push(
-				this.postService.unlikePost(this.postResponse.id).subscribe({
+				this.postService.unlikePost(favoriteId).subscribe({
 					next: (response: any) => {
-						this.postResponse.likedByAuthUser = false;
-						this.postResponse.likeCount--;
+            this.postDeletedEvent.emit(this.postResponse);
 					},
 					error: (errorResponse: HttpErrorResponse) => {
 						this.matSnackbar.openFromComponent(SnackbarComponent, {
@@ -158,8 +162,7 @@ export class PostComponent implements OnInit, OnDestroy {
 			this.subscriptions.push(
 				this.postService.likePost(this.postResponse.id).subscribe({
 					next: (response: any) => {
-						this.postResponse.likedByAuthUser = true;
-						this.postResponse.likeCount++;
+            this.postDeletedEvent.emit(this.postResponse);
 					},
 					error: (errorResponse: HttpErrorResponse) => {
 						this.matSnackbar.openFromComponent(SnackbarComponent, {

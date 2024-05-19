@@ -12,16 +12,20 @@ export class CommentService {
 
 	constructor(private httpClient: HttpClient) { }
 
+  getCommentByPostId(postId: number,): Observable<any | HttpErrorResponse> {
+		return this.httpClient.get<User[] | HttpErrorResponse>(`${this.host}/comment/${postId}`);
+	}
+
+  deleteComment(commentId: number): Observable<any | HttpErrorResponse> {
+		return this.httpClient.delete<any | HttpErrorResponse>(`${this.host}/comment/${commentId}`);
+	}
+
 	likeComment(commentId: number): Observable<any | HttpErrorResponse> {
 		return this.httpClient.post<any | HttpErrorResponse>(`${this.host}/posts/comments/${commentId}/like`, null);
 	}
 
 	unlikeComment(commentId: number): Observable<any | HttpErrorResponse> {
 		return this.httpClient.post<any | HttpErrorResponse>(`${this.host}/posts/comments/${commentId}/unlike`, null);
-	}
-
-	deleteComment(postId: number, commentId: number): Observable<any | HttpErrorResponse> {
-		return this.httpClient.post<any | HttpErrorResponse>(`${this.host}/posts/${postId}/comments/${commentId}/delete`, null);
 	}
 
 	getCommentLikes(commentId: number, page: number, size: number): Observable<User[] | HttpErrorResponse> {

@@ -66,6 +66,18 @@ export class PostService {
 		return this.httpClient.post<any | HttpErrorResponse>(`${this.host}/posts/${postId}/photo/delete`, null);
 	}
 
+  getPostLikes(postId: number): Observable<any[] | HttpErrorResponse> {
+		return this.httpClient.get<any[] | HttpErrorResponse>(`${this.host}/favorite/${postId}`);
+	}
+
+  likePost(postId: number): Observable<any | HttpErrorResponse> {
+		return this.httpClient.post<any | HttpErrorResponse>(`${this.host}/favorite`, { postId });
+	}
+
+  unlikePost(postId: number): Observable<any | HttpErrorResponse> {
+		return this.httpClient.delete<any | HttpErrorResponse>(`${this.host}/favorite/${postId}`);
+	}
+
 	// deletePost(postId: number, isTypeShare: boolean): Observable<any | HttpErrorResponse> {
 	// 	if (isTypeShare) {
 	// 		return this.httpClient.post<any | HttpErrorResponse>(`${this.host}/posts/${postId}/share/delete`, null);
@@ -73,11 +85,6 @@ export class PostService {
 	// 		return this.httpClient.post<any | HttpErrorResponse>(`${this.host}/posts/${postId}/delete`, null);
 	// 	}
 	// }
-
-	getPostLikes(postId: number, page: number, size: number): Observable<User[] | HttpErrorResponse> {
-		const reqParams = new HttpParams().set('page', page).set('size', size);
-		return this.httpClient.get<User[] | HttpErrorResponse>(`${this.host}/posts/${postId}/likes`, { params: reqParams });
-	}
 
 	getPostComments(postId: number, page: number, size: number): Observable<CommentResponse[] | HttpErrorResponse> {
 		const reqParams = new HttpParams().set('page', page).set('size', size);
@@ -89,18 +96,13 @@ export class PostService {
 		return this.httpClient.get<PostResponse[] | HttpErrorResponse>(`${this.host}/posts/${postId}/shares`, { params: reqParams });
 	}
 
-	likePost(postId: number): Observable<any | HttpErrorResponse> {
-		return this.httpClient.post<any | HttpErrorResponse>(`${this.host}/posts/${postId}/like`, null);
-	}
-
-	unlikePost(postId: number): Observable<any | HttpErrorResponse> {
-		return this.httpClient.post<any | HttpErrorResponse>(`${this.host}/posts/${postId}/unlike`, null);
-	}
-
 	createPostComment(postId: number, content: string): Observable<CommentResponse | HttpErrorResponse> {
-		const formData = new FormData();
-		formData.append('content', content);
-		return this.httpClient.post<CommentResponse | HttpErrorResponse>(`${this.host}/posts/${postId}/comments/create`, formData);
+		// const formData = new FormData();
+		// formData.append('content', content);
+		return this.httpClient.post<CommentResponse | HttpErrorResponse>(`${this.host}/comment`, {
+      postId: postId,
+      content: content
+    });
 	}
 
 	likePostComment(commentId: number): Observable<any | HttpErrorResponse> {

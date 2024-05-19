@@ -24,10 +24,10 @@ import { SnackbarComponent } from '../snackbar/snackbar.component';
 	styleUrls: ['./post-comment-dialog.component.css']
 })
 export class PostCommentDialogComponent implements OnInit, OnDestroy {
-	@Output() updatedCommentCountEvent = new EventEmitter<number>();
+	@Output() updatedCommentEvent = new EventEmitter<number>();
 	@Output() newItemEvent = new EventEmitter<string>();
 	authUserId: number;
-	commentResponseList: CommentResponse[] = [];
+	commentResponseList: any[] = [];
 	resultPage: number = 1;
 	resultSize: number = 5;
 	hasMoreResult: boolean = false;
@@ -35,18 +35,19 @@ export class PostCommentDialogComponent implements OnInit, OnDestroy {
 	creatingComment: boolean = false;
 	commentFormGroup: FormGroup;
 	defaultProfilePhotoUrl = environment.defaultProfilePhotoUrl;
+	defaultProfilePhoto = environment.defaultProfilePhoto;
 
 	private subscriptions: Subscription[] = [];
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public dataPost: Post,
+		@Inject(MAT_DIALOG_DATA) public dataPost: any,
 		private authService: AuthService,
 		private postService: PostService,
 		private commentService: CommentService,
 		private formBuilder: FormBuilder,
 		private matDialog: MatDialog,
 		private matSnackbar: MatSnackBar) { }
-	
+
 	get content() { return this.commentFormGroup.get('content') }
 
 	ngOnInit(): void {
@@ -56,42 +57,28 @@ export class PostCommentDialogComponent implements OnInit, OnDestroy {
 			content: new FormControl('', [Validators.required, Validators.maxLength(1024)])
 		});
 
-		this.loadComments(1);
+		this.loadComments();
 	}
 
 	ngOnDestroy(): void {
 		this.subscriptions.forEach(sub => sub.unsubscribe());
 	}
 
-	loadComments(currentPage: number): void {
-		if (!this.fetchingResult) {
-			if (this.dataPost.commentCount > 0) {
-				this.fetchingResult = true;
-	
-				this.subscriptions.push(
-					this.postService.getPostComments(this.dataPost.id, currentPage, this.resultSize).subscribe({
-						next: (resultList: CommentResponse[]) => {
-							resultList.forEach(commentResponse => this.commentResponseList.push(commentResponse));
-							if (currentPage * this.resultSize < this.dataPost.commentCount) {
-								this.hasMoreResult = true;
-							} else {
-								this.hasMoreResult = false;
-							}
-							this.resultPage++;
-							this.fetchingResult = false;
-						},
-						error: (errorResponse: HttpErrorResponse) => {
-							this.matSnackbar.openFromComponent(SnackbarComponent, {
-								data: AppConstants.snackbarErrorContent,
-								panelClass: ['bg-danger'],
-								duration: 5000
-							});
-							this.fetchingResult = false;
-						}
-					})
-				);
-			} 
-		}
+	loadComments(): void {
+    this.commentService.getCommentByPostId(this.dataPost.id).subscribe({
+      next: (resultList: CommentResponse[]) => {
+        this.commentResponseList = [...resultList];
+      },
+      error: (errorResponse: HttpErrorResponse) => {
+        this.matSnackbar.openFromComponent(SnackbarComponent, {
+          data: AppConstants.snackbarErrorContent,
+          panelClass: ['bg-danger'],
+          duration: 5000
+        });
+        this.fetchingResult = false;
+      }
+    })
+
 	}
 
 	createNewComment(): void {
@@ -104,7 +91,7 @@ export class PostCommentDialogComponent implements OnInit, OnDestroy {
 						this.commentFormGroup.get(key).setErrors(null) ;
 					});
 					this.commentResponseList.unshift(newComment);
-					this.updatedCommentCountEvent.emit(this.commentResponseList.length);
+					this.updatedCommentEvent.emit();
 					this.creatingComment = false;
 
 				},
@@ -115,6 +102,28 @@ export class PostCommentDialogComponent implements OnInit, OnDestroy {
 						duration: 5000
 					});
 					this.creatingComment = false;
+				}
+			})
+		);
+	}
+
+  deleteComment(commentResponse: any) {
+		this.subscriptions.push(
+			this.commentService.deleteComment(commentResponse.id).subscribe({
+				next: (response: any) => {
+          this.loadComments();
+					this.updatedCommentEvent.emit();
+					this.matSnackbar.openFromComponent(SnackbarComponent, {
+						data: 'Xóa bình luận thành công',
+						duration: 5000
+					});
+				},
+				error: (errorResponse: HttpErrorResponse) => {
+					this.matSnackbar.openFromComponent(SnackbarComponent, {
+						data: AppConstants.snackbarErrorContent,
+						panelClass: ['bg-danger'],
+						duration: 5000
+					});
 				}
 			})
 		);
@@ -168,7 +177,7 @@ export class PostCommentDialogComponent implements OnInit, OnDestroy {
 
 	openCommentDeleteConfirmDialog(commentResponse: CommentResponse): void {
 		const dialogRef = this.matDialog.open(ConfirmationDialogComponent, {
-			data: 'Do you want to delete this comment permanently?',
+			data: 'Bạn có chắc chắn muốn xóa bình luận này không?',
 			autoFocus: false,
 			width: '500px'
 		});
@@ -177,30 +186,6 @@ export class PostCommentDialogComponent implements OnInit, OnDestroy {
 			result => {
 				if (result) this.deleteComment(commentResponse);
 			}
-		);
-	}
-
-	private deleteComment(commentResponse: CommentResponse) {
-		this.subscriptions.push(
-			this.commentService.deleteComment(this.dataPost.id, commentResponse.comment.id).subscribe({
-				next: (response: any) => {
-					const targetIndex = this.commentResponseList.indexOf(commentResponse);
-					this.commentResponseList.splice(targetIndex, 1);
-					this.dataPost.commentCount--;
-
-					this.matSnackbar.openFromComponent(SnackbarComponent, {
-						data: 'Comment deleted successfully.',
-						duration: 5000
-					});
-				},
-				error: (errorResponse: HttpErrorResponse) => {
-					this.matSnackbar.openFromComponent(SnackbarComponent, {
-						data: AppConstants.snackbarErrorContent,
-						panelClass: ['bg-danger'],
-						duration: 5000
-					});
-				}
-			})
 		);
 	}
 }

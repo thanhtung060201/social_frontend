@@ -90,7 +90,7 @@
 			style="padding: 4px 10px !important; min-height: 28px;" (click)="openLikeDialog()">
 			Yêu thích
 			<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
-				{{ postResponse?.post?.likeCount ? postResponse?.post?.likeCount : 0 }}
+				{{ postResponse?.favorites?.length ? postResponse?.favorites?.length : 0 }}
 			</span>
 		</mat-chip>
 
@@ -98,7 +98,7 @@
 			style="padding: 4px 10px !important; min-height: 28px;" (click)="openCommentDialog()">
 			Bình luận
 			<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
-				{{ postResponse?.post?.comments?.length ? postResponse?.post?.comments?.length : 0 }}
+				{{ postResponse?.comments?.length ? postResponse?.comments?.length : 0 }}
 			</span>
 		</mat-chip>
 

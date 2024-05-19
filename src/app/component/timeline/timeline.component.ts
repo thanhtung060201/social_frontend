@@ -60,37 +60,32 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	}
 
 	loadTimelinePosts(): void {
-		if (!this.fetchingResult) {
-			this.fetchingResult = true;
-			this.subscriptions.push(
-				this.timelineService.getTimelinePosts().subscribe({
-					next: (postResponseList: any[]) => {
-						if (!postResponseList.length) this.noPost = true;
+    this.timelineService.getTimelinePosts().subscribe({
+      next: (postResponseList: any[]) => {
+        if (!postResponseList.length) this.noPost = true;
 
-						// postResponseList.forEach(pR => this.timelinePostResponseList.push(pR));
-            this.timelinePostResponseList = [...postResponseList];
+        // postResponseList.forEach(pR => this.timelinePostResponseList.push(pR));
+        this.timelinePostResponseList = [...postResponseList.sort((a, b) => (a.id > b.id ? -1 : 1))];
 
-						// if (postResponseList.length > 0) {
-						// 	this.hasMoreResult = true;
-						// } else {
-						// 	this.hasMoreResult = false;
-						// }
+        // if (postResponseList.length > 0) {
+        // 	this.hasMoreResult = true;
+        // } else {
+        // 	this.hasMoreResult = false;
+        // }
 
-						// this.fetchingResult = false;
-						this.loadingTimelinePostsInitially = false;
-            this.cd.detectChanges();
-					},
-					error: (errorResponse: HttpErrorResponse) => {
-						this.matSnackbar.openFromComponent(SnackbarComponent, {
-							data: AppConstants.snackbarErrorContent,
-							panelClass: ['bg-danger'],
-							duration: 5000
-						});
-						this.fetchingResult = false;
-					}
-				})
-			);
-		}
+        // this.fetchingResult = false;
+        this.loadingTimelinePostsInitially = false;
+        this.cd.detectChanges();
+      },
+      error: (errorResponse: HttpErrorResponse) => {
+        this.matSnackbar.openFromComponent(SnackbarComponent, {
+          data: AppConstants.snackbarErrorContent,
+          panelClass: ['bg-danger'],
+          duration: 5000
+        });
+        this.fetchingResult = false;
+      }
+    })
 	}
 
 	loadTaggedPosts(tagName: string, currentPage: number): void {
@@ -128,7 +123,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		this.subscriptions.push(
 			this.timelineService.getTimelineTags().subscribe({
 				next: (tagList: Tag[]) => {
-					tagList.forEach(t => this.timelineTagList.push(t));
+          this.timelineTagList = [...tagList];
 					this.loadingTimelineTagsInitially = false;
 					this.fetchingResult = false;
 				},
