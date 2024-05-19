@@ -18,9 +18,14 @@
 				</mat-error>
 			</mat-form-field>
 
-			<div *ngIf="dataPost && dataPost.imagePath" class="pb-3">
-				<img src="assets/images/{{dataPost.imagePath}}" alt="" style="max-width: 100%;">
-			</div>
+      <ng-container *ngIf="imagePreviewUrl;else defaultImage">
+        <img [src]="imagePreviewUrl" alt="" style="max-width: 100%;">
+      </ng-container>
+      <ng-template #defaultImage>
+        <div *ngIf="imagePreview" class="pb-3">
+          <img src="assets/images/{{imagePreview}}" alt="" style="max-width: 100%;">
+        </div>
+      </ng-template>
 
 			<div>
 				<div class="mb-3" *ngIf="postTags.length > 0">
@@ -32,9 +37,9 @@
 					</span>
 				</div>
 
-				<input type="file" class="d-none visually-hidden" id="postPhotoFile" *ngIf="!dataPost || (dataPost && !dataPost.isTypeShare)" (change)="previewPostPhoto($event)">
+				<input type="file" class="d-none visually-hidden" id="postPhotoFile" (change)="previewPostPhoto($event)">
 
-				<label for="postPhotoFile" *ngIf="!dataPost || (dataPost && !dataPost.isTypeShare)">
+				<label for="postPhotoFile">
 					<div class="border border-1 rounded-pill ps-3 pt-1 pe-3 pb-1 cursor-pointer">
 						<mat-icon class="align-middle">camera_alt</mat-icon>
 						<span class="align-middle fw-500 ps-2">
@@ -43,7 +48,7 @@
 					</div>
 				</label>
 
-				<span class="fw-500 align-middle cursor-pointer text-danger d-inline-block ms-4" *ngIf="dataPost && dataPost.postPhoto" (click)="openPostPhotoDeleteConfirmDialog()">Delete Photo</span>
+				<span *ngIf="imagePreview || imagePreviewUrl" class="fw-500 align-middle cursor-pointer text-danger d-inline-block ms-4" (click)="openPostPhotoDeleteConfirmDialog()">Delete Photo</span>
 
 				<button mat-icon-button color="primary" matTooltip="Tạo tag mới" matTooltipPosition="left" class="float-end" (click)="openAddTagDialog($event)">
 					<mat-icon>style</mat-icon>

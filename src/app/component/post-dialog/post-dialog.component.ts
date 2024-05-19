@@ -21,7 +21,8 @@ import { TagDialogComponent } from '../tag-dialog/tag-dialog.component';
 export class PostDialogComponent implements OnInit, OnDestroy {
 	postFormGroup: FormGroup;
 	postPhoto: File;
-	postPhotoPreviewUrl: string;
+	imagePreview: string;
+	imagePreviewUrl: string;
 	postTags: any[] = [];
 	creatingPost: boolean = false;
 
@@ -45,7 +46,7 @@ export class PostDialogComponent implements OnInit, OnDestroy {
 
 		if (this.dataPost) {
 			if (this.dataPost.imagePath) {
-				this.postPhotoPreviewUrl = this.dataPost.imagePath;
+				this.imagePreview = this.dataPost.imagePath;
 			}
 
 			this.populateWithPostTags();
@@ -62,7 +63,7 @@ export class PostDialogComponent implements OnInit, OnDestroy {
 			const reader = new FileReader();
 			reader.readAsDataURL(this.postPhoto);
 			reader.onload = (e: any) => {
-				this.postPhotoPreviewUrl = e.target.result;
+				this.imagePreviewUrl = e.target.result;
 			}
 		}
 	}
@@ -208,24 +209,13 @@ export class PostDialogComponent implements OnInit, OnDestroy {
 	}
 
 	private deletePostPhoto(): void {
-		this.subscriptions.push(
-			this.postService.deletePostPhoto(this.dataPost.id).subscribe({
-				next: (createdPost: Post) => {
-					this.postPhotoPreviewUrl = null;
-					this.matSnackbar.openFromComponent(SnackbarComponent, {
-						data: 'Photo deleted successfully.',
-						duration: 5000
-					});
-				},
-				error: (errorResponse: HttpErrorResponse) => {
-					this.matSnackbar.openFromComponent(SnackbarComponent, {
-						data: AppConstants.snackbarErrorContent,
-						panelClass: ['bg-danger'],
-						duration: 5000
-					});
-				}
-			})
-		);
+    this.imagePreview = null;
+    this.postPhoto = null;
+    this.imagePreviewUrl = null;
+    this.matSnackbar.openFromComponent(SnackbarComponent, {
+      data: 'Xóa ảnh thành công',
+      duration: 5000
+    });
 	}
 
 	private populateWithPostTags(): void {
