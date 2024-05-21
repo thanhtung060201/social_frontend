@@ -25,10 +25,33 @@ export class UserService {
 		return this.httpClient.get<UserResponse | HttpErrorResponse>(`${this.host}/user/${userId}`);
 	}
 
-  updateImageByUserId(fileImage: any) {
+	getUserSearchResult(keyword: string): Observable<UserResponse[] | HttpErrorResponse> {
+		return this.httpClient.get<UserResponse[] | HttpErrorResponse>(`${this.host}/user/search/${keyword}`);
+	}
+
+    updateImageByUserId(fileImage: any) {
 		const formData = new FormData();
 		formData.append('file', fileImage);
 		return this.httpClient.post<any>(`${this.host}/user/upload`, formData);
+	}
+	
+	getAllFriendByUserId() {
+		return this.httpClient.get<HttpResponse<any> | HttpErrorResponse>(`${this.host}/user/friends/my`);
+	}
+
+	getStatusRequestFriend(userId: any) {
+		return this.httpClient.get<HttpResponse<any> | HttpErrorResponse>(`${this.host}/user/friend-request/status/${userId}`);
+	}
+
+	updateRequestFriend(friendRequestId: any, status: string) {
+		const body = {
+			status: status
+		}
+		return this.httpClient.put<HttpResponse<any> | HttpErrorResponse>(`${this.host}/user/friend-request/response/${friendRequestId}`, body);
+	}
+
+	sendRequestFriend(userId: any) {
+		return this.httpClient.post<HttpResponse<any> | HttpErrorResponse>(`${this.host}/user/friend-request/send/${userId}`, {});
 	}
 
 	getUserFollowingList(userId: number, page: number, size: number): Observable<UserResponse[] | HttpErrorResponse> {
@@ -83,11 +106,6 @@ export class UserService {
 
 	unfollowUser(userId: number): Observable<any | HttpErrorResponse> {
 		return this.httpClient.post<any | HttpErrorResponse>(`${this.host}/account/unfollow/${userId}`, null);
-	}
-
-	getUserSearchResult(key: string, page: number, size: number): Observable<UserResponse[] | HttpErrorResponse> {
-		const reqParams = new HttpParams().set('key', key).set('page', page).set('size', size);
-		return this.httpClient.get<UserResponse[] | HttpErrorResponse>(`${this.host}/users/search`, { params: reqParams });
 	}
 
 	forgotPassword(email: string): Observable<any | HttpErrorResponse> {

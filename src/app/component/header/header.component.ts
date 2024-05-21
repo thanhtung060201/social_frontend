@@ -24,7 +24,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	authUser: any;
 	isUserLoggedIn: boolean = false;
 	isProfilePage: boolean = false;
-	notifications: Notification[] = [];
+	notifications: any[] = [];
 	hasUnseenNotification: boolean = false;
 	resultPage: number = 1;
 	resultSize: number = 5;
@@ -41,34 +41,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		private matDialog: MatDialog,
 		private matSnackbar: MatSnackBar,
 		private userService: UserService
-) { }
+	) { }
 
 	ngOnInit(): void {
-    console.log(this.authService.isUserLoggedIn());
-		if (this.authService.isUserLoggedIn()) {
+		this.userService.getUserById(this.authService.getAuthUserId()).subscribe((data) => {
+			this.authUser = { ...data };
 			this.isUserLoggedIn = true;
-      this.userService.getUserById(this.authService.getAuthUserId()).subscribe((data) => {
-        this.authUser = data;
-        console.log(this.authUser);
-      });
-		} else {
-			this.isUserLoggedIn = false;
-		}
-
-		if (this.isUserLoggedIn) {
-			// this.loadNotifications(1);
-		}
+		});
+		this.loadNotifications();
 
 		this.authService.logoutSubject.subscribe(loggedOut => {
 			if (loggedOut) {
 				this.isUserLoggedIn = false;
-			}
-		});
-
-		this.authService.loginSubject.subscribe(loggedInUser => {
-			if (loggedInUser) {
-				this.authUser = loggedInUser;
-				this.isUserLoggedIn = true;
 			}
 		});
 	}
@@ -93,26 +77,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	loadNotifications(page: number): void {
+	loadNotifications(): void {
 		this.fetchingResult = true;
 
 		this.subscriptions.push(
-			this.notificationService.getNotifications(page,  this.resultSize).subscribe({
-				next: (notifications: Notification[]) => {
+			this.notificationService.getNotificationsRequestFriend().subscribe({
+				next: (notifications: any[]) => {
 					this.fetchingResult = false;
 
-					notifications.forEach(n => {
-						this.notifications.push(n);
-						if (!n.isSeen) this.hasUnseenNotification = true;
-					});
-
-					if (notifications.length > 0) {
-						this.hasMoreNotifications = true;
-					} else {
-						this.hasMoreNotifications = false;
+					this.notifications = [...notifications];
+					console.log(this.notifications);
+					if(this.notifications.length) {
+						this.hasUnseenNotification = true;
 					}
-
-					this.resultPage++;
 				},
 				error: (errorResponse: HttpErrorResponse) => {
 					this.matSnackbar.openFromComponent(SnackbarComponent, {
@@ -126,22 +103,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		);
 	}
 
+	acceptRequestFriend(requestFriendId: any) {
+		this.userService.updateRequestFriend(requestFriendId, 'accepted').subscribe((data) => {})
+	}
+
 	handleUnseenNotifications(): void {
-		if (this.hasUnseenNotification) {
-			this.subscriptions.push(
-				this.notificationService.markAllSeen().subscribe({
-					next: (response: any) => {
-						this.hasUnseenNotification = false;
-					},
-					error: (errorResponse: HttpErrorResponse) => {
-						this.matSnackbar.openFromComponent(SnackbarComponent, {
-							data: AppConstants.snackbarErrorContent,
-							panelClass: ['bg-danger'],
-							duration: 5000
-						});
-					}
-				})
-			);
-		}
+		// if (this.hasUnseenNotification) {
+		// 	this.subscriptions.push(
+		// 		this.notificationService.markAllSeen().subscribe({
+		// 			next: (response: any) => {
+		// 				this.hasUnseenNotification = false;
+		// 			},
+		// 			error: (errorResponse: HttpErrorResponse) => {
+		// 				this.matSnackbar.openFromComponent(SnackbarComponent, {
+		// 					data: AppConstants.snackbarErrorContent,
+		// 					panelClass: ['bg-danger'],
+		// 					duration: 5000
+		// 				});
+		// 			}
+		// 		})
+		// 	);
+		// }
 	}
 }

@@ -30,25 +30,33 @@
 					</div>
 
 					<div class="profile-info d-inline-block align-top ps-3" style="margin-top: -30px">
-						<h1 class="mat-display-1 mb-3" style="font-weight: 500;">
+						<h1 class="mat-display-1 mb-1" style="font-weight: 500;">
 							{{ profileUser.lastName + ' ' + profileUser.firstName }}
 						</h1>
 
-						<!-- <p>
+						<p>
 							<a class="text-decoration-none text-secondary mat-h3 cursor-pointer" style="font-weight: 500;" (click)="openFollowingDialog(profileUser)">
-								{{ profileUser.followingCount }} Following
+								{{ listFriends.length ?? 0 }} Bạn bè
 							</a>
-							<span class="ps-2 pe-2 mat-h3 fw-bold">|</span>
+							<!-- <span class="ps-2 pe-2 mat-h3 fw-bold">|</span>
 							<a class="text-decoration-none text-secondary mat-h3 cursor-pointer" style="font-weight: 500;" (click)="openFollowerDialog(profileUser)">
 								{{ profileUser.followerCount }} Follower
-							</a>
-						</p> -->
+							</a> -->
+						</p>
 					</div>
 
-					<!-- <div style="position: absolute; right: 30px; top: 30px;" *ngIf="!isProfileViewerOwner">
-						<button mat-raised-button color="primary" *ngIf="!viewerFollowsProfileUser" (click)="openFollowConfirmDialog(profileUser.id)">Follow</button>
-						<button mat-raised-button color="warn" *ngIf="viewerFollowsProfileUser" (click)="openUnfollowConfirmDialog(profileUser.id)">Unfollow</button>
-					</div> -->
+					<div style="position: absolute; right: 30px; top: 30px;" *ngIf="!isProfileViewerOwner">
+						<ng-container *ngIf="statusFriend === 'not-sent' || statusFriend === 'declined'">
+							<button mat-raised-button color="primary" (click)="sendRequestFriend(profileUser.id)">Thêm bạn bè</button>
+						</ng-container>
+						<ng-container *ngIf="statusFriend === 'pending'">
+							<button mat-raised-button color="muted" style="background-color: #adadad;" (click)="cancelRequestFriend(currentRequestFriendId)">Đã gửi lời mời kết bạn</button>
+						</ng-container>
+						<ng-container *ngIf="statusFriend === 'accepted'">
+							<button mat-raised-button color="success" (click)="acceptRequestFriend(currentRequestFriendId)">Bạn bè</button>
+						</ng-container>
+						<button style="margin-left: 1rem;" mat-raised-button color="secondary" (click)="openUnfollowConfirmDialog(profileUser.id)">Nhắn tin</button>
+					</div>
 				</div>
 			</div>
 		</div>

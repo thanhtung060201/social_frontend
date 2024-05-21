@@ -18,7 +18,7 @@ import { SnackbarComponent } from '../snackbar/snackbar.component';
 	styleUrls: ['./search-dialog.component.css']
 })
 export class SearchDialogComponent implements OnInit, OnDestroy {
-	searchResult: UserResponse[] = [];
+	searchResult: any[] = [];
 	searchUserFormGroup: FormGroup;
 	resultPage: number = 1;
 	resultSize: number = 5;
@@ -26,6 +26,7 @@ export class SearchDialogComponent implements OnInit, OnDestroy {
 	noResult: boolean = false;
 	fetchingResult: boolean = false;
 	defaultProfilePhotoUrl: string = environment.defaultProfilePhotoUrl;
+	defaultProfilePhoto: string = environment.defaultProfilePhoto;
 
 	private subscriptions: Subscription[] = [];
 
@@ -40,7 +41,7 @@ export class SearchDialogComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.searchUserFormGroup = this.formBuilder.group({
-			key: new FormControl('', [Validators.minLength(3), Validators.maxLength(64)])
+			key: new FormControl('', [Validators.minLength(1), Validators.maxLength(64)])
 		});
 	}
 
@@ -48,49 +49,32 @@ export class SearchDialogComponent implements OnInit, OnDestroy {
 		this.subscriptions.forEach(sub => sub.unsubscribe());
 	}
 
-	searchUser(currentPage: number): void {
+	searchUser(): void {
 		if (!this.fetchingResult) {
-			if (this.key.value.length >= 3) {
+			if (this.key.value.length) {
 				this.fetchingResult = true;
-	
-				if (currentPage === 1) this.searchResult = [];
-	
-				this.subscriptions.push(
-					this.userService.getUserSearchResult(this.key.value, currentPage, this.resultSize).subscribe({
-						next: (resultList: UserResponse[]) => {
-							if (resultList.length <= 0 && currentPage === 1) {
-								this.noResult = true;
-							} else {
-								this.noResult = false;
-							}
-	
-							resultList.forEach(uR => this.searchResult.push(uR));
-							this.resultPage++;
-							this.fetchingResult = false;
-	
-							if (resultList.length < this.resultSize) {
-								this.hasMoreResult = false;
-								this.resultPage = 1;
-							} else {
-								this.hasMoreResult = true;
-							}
-						},
-						error: (errorResponse: HttpErrorResponse) => {
-							this.fetchingResult = false;
-							this.matSnackbar.openFromComponent(SnackbarComponent, {
-								data: AppConstants.snackbarErrorContent,
-								panelClass: ['bg-danger'],
-								duration: 5000
-							});
+				this.userService.getUserSearchResult(this.key.value).subscribe({
+					next: (resultList: UserResponse[]) => {
+						if (!resultList.length) {
+							this.noResult = true;
+						} else {
+							this.noResult = false;
 						}
-					})
-				);
-			} else {
-				this.matSnackbar.openFromComponent(SnackbarComponent, {
-					data: 'Search key must be between 3 to 64 characters long.',
-					panelClass: ['bg-danger'],
-					duration: 5000
-				});
+
+						this.searchResult = [...resultList];
+						console.log(this.searchResult);
+
+						this.fetchingResult = false;
+					},
+					error: (errorResponse: HttpErrorResponse) => {
+						this.fetchingResult = false;
+						this.matSnackbar.openFromComponent(SnackbarComponent, {
+							data: AppConstants.snackbarErrorContent,
+							panelClass: ['bg-danger'],
+							duration: 5000
+						});
+					}
+				})
 			}
 		}
 	} 

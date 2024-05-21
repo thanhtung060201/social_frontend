@@ -37,6 +37,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	fetchingResult: boolean = false;
 	loadingProfile: boolean = false;
 	hasNoPost: boolean = false;
+	statusFriend: 'pending' | 'accepted' | 'declined' | 'not-sent' = 'not-sent';
+	currentRequestFriendId: string = '';
+	listFriends: any[] = [];
 
 	private subscriptions: Subscription[] = [];
 
@@ -99,6 +102,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					}
 				})
 			);
+			this.getAllFriendByUserId();
+			this.getStatusRequestFriend();
+
 		}
 
 
@@ -116,9 +122,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		if (!this.fetchingResult) {
 			this.fetchingResult = true;
 			this.subscriptions.push(
-				this.timelineService.getTimelinePosts().subscribe({
+				this.timelineService.getPostByUserId(this.profileUserId).subscribe({
 					next: (postResponses: PostResponse[]) => {
-						postResponses.forEach(post => this.profileUserPostResponses.push(post));
+						this.profileUserPostResponses = [...postResponses];
 						if (postResponses.length === 0)  this.hasNoPost = true;
 						this.fetchingResult = false;
 					},
@@ -132,6 +138,33 @@ export class ProfileComponent implements OnInit, OnDestroy {
 				})
 			);
 		}
+	}
+
+	getAllFriendByUserId() {
+		this.userService.getAllFriendByUserId().subscribe((data: any) => {
+			this.listFriends = [...data];
+		})
+	}
+
+	getStatusRequestFriend() {
+		this.userService.getStatusRequestFriend(this.profileUserId).subscribe((data: any) => {
+			this.statusFriend = data.status as any;
+			this.currentRequestFriendId = data.id;
+		});	
+	}
+
+	sendRequestFriend(userId: any) {
+		this.userService.sendRequestFriend(userId).subscribe((data) => {
+			this.statusFriend = 'pending';
+		});
+	}
+
+	cancelRequestFriend(userId: any) {}
+
+	acceptRequestFriend(requestFriendId: any) {
+		this.userService.updateRequestFriend(requestFriendId, 'accepted').subscribe((data) => {
+			this.statusFriend = 'accepted';
+		})
 	}
 
 	openFollowingDialog(user: User): void {

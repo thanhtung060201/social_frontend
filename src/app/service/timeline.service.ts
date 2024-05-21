@@ -13,6 +13,10 @@ export class TimelineService {
 
 	constructor(private httpClient: HttpClient) { }
 
+	getPostByUserId(userId: any): Observable<PostResponse[] | HttpErrorResponse> {
+		return this.httpClient.get<PostResponse[] | HttpErrorResponse>(`${this.host}/newfeed/user/${userId}`);
+	}
+
 	getTimelinePosts(): Observable<PostResponse[] | HttpErrorResponse> {
 		return this.httpClient.get<PostResponse[] | HttpErrorResponse>(`${this.host}/newfeed`);
 	}
