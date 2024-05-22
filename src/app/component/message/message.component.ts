@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AppConstants } from 'src/app/common/app-constants';
+import { Observable } from 'rxjs';
+import { MessageService } from 'src/app/service/message.service';
 
 @Component({
 	selector: 'app-message',
@@ -8,31 +9,23 @@ import { AppConstants } from 'src/app/common/app-constants';
 	styleUrls: ['./message.component.css']
 })
 export class MessageComponent implements OnInit, OnDestroy {
-	messageType: string;
-	messageHeader: string;
-	messageDetail: string;
-	toSignup: boolean = false;
-	toLogin: boolean = false;
+	newMessage$: Observable<string>;
+	messages: any[] = [];
 
-	constructor(private router: Router) { }
+	constructor(private messageService: MessageService) { }
 
 	ngOnInit(): void {
-		this.messageType = localStorage.getItem(AppConstants.messageTypeLabel)
-		this.messageHeader = localStorage.getItem(AppConstants.messageHeaderLabel)
-		this.messageDetail = localStorage.getItem(AppConstants.messageDetailLabel)
-		this.toSignup = localStorage.getItem(AppConstants.toSignupLabel) === 'true' ? true : false;
-		this.toLogin = localStorage.getItem(AppConstants.toLoginLabel) === 'true' ? true : false;
+		this.messageService.getNewMessage().subscribe((message: any) => {
+			this.messages.push(message);
+		})
+	}
 
-		if (this.messageType === null || this.messageHeader === null) {
-			this.router.navigateByUrl('/');
-		}
+	sendMessage() {
+		const message = '';
+		this.messageService.sendMessage(message);
 	}
 
 	ngOnDestroy(): void {
-		localStorage.removeItem(AppConstants.messageTypeLabel);
-		localStorage.removeItem(AppConstants.messageHeaderLabel);
-		localStorage.removeItem(AppConstants.messageDetailLabel);
-		localStorage.removeItem(AppConstants.toSignupLabel);
-		localStorage.removeItem(AppConstants.toLoginLabel);
+
 	}
 }

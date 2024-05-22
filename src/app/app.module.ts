@@ -61,6 +61,10 @@ import { TagDialogComponent } from './component/tag-dialog/tag-dialog.component'
 import { ForgotPasswordDialogComponent } from './component/forgot-password-dialog/forgot-password-dialog.component';
 import { ResetPasswordComponent } from './component/reset-password/reset-password.component';
 
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
+
 @NgModule({
 	declarations: [
 		AppComponent,
@@ -122,7 +126,8 @@ import { ResetPasswordComponent } from './component/reset-password/reset-passwor
 		MatRadioModule,
 		MatDatepickerModule,
 		MatNativeDateModule,
-		MatMomentDateModule
+		MatMomentDateModule,
+		SocketIoModule.forRoot(config)
 	],
 	providers: [
 		AuthGuard,
