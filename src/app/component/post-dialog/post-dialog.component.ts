@@ -154,7 +154,7 @@ export class PostDialogComponent implements OnInit, OnDestroy {
 						}
 						this.matDialogRef.close();
 						this.matSnackbar.openFromComponent(SnackbarComponent, {
-							data: 'Post created successfully.',
+							data: 'Tạo bài viết thành công',
 							duration: 5000
 						});
 						this.creatingPost = false;

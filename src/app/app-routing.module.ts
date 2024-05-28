@@ -23,7 +23,7 @@ const routes: Routes = [
 	{ path: 'verify-email/:token', component: VerifyEmailComponent },
 	{ path: 'reset-password/:token', component: ResetPasswordComponent },
 	{ path: 'posts/:postId', component: PostDetailComponent },
-	{ path: 'message/:messageId', component: MessageComponent },
+	{ path: 'message', component: MessageComponent },
 	{ path: '**', redirectTo: '/login', pathMatch: 'full' }
 ];
 

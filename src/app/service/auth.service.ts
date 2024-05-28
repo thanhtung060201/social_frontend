@@ -12,7 +12,7 @@ import { UserSignup } from '../model/user-signup';
 })
 export class AuthService {
 	logoutSubject = new Subject<boolean>();
-	loginSubject = new Subject<User>();
+	loginSubject = new Subject<any>();
 	private host = environment.apiUrl;
 	private authToken: string;
 	private authUser: User;
@@ -36,6 +36,7 @@ export class AuthService {
 		localStorage.removeItem('authUser');
 		localStorage.removeItem('authToken');
 		this.logoutSubject.next(true);
+    // window.location.href = 'http://localhost:4200/login';
 	}
 
 	storeTokenInCache(authToken: string): void {
@@ -58,7 +59,7 @@ export class AuthService {
 			this.authUser = authUser;
 			localStorage.setItem('authUser', JSON.stringify(this.parseJwt(authUser).user));
 		}
-		this.loginSubject.next(authUser);
+		this.loginSubject.next(true);
 	}
 
 	getAuthUserFromCache(): User {
@@ -94,5 +95,5 @@ export class AuthService {
     }).join(''));
 
     return JSON.parse(jsonPayload);
-}
+  }
 }
