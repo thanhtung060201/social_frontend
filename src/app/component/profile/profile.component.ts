@@ -149,8 +149,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	getStatusRequestFriend() {
 		this.userService.getStatusRequestFriend(this.profileUserId).subscribe((data: any) => {
 			this.statusFriend = data.status as any;
+      console.log(data);
 			this.currentRequestFriendId = data.id;
-		});	
+		});
 	}
 
 	sendRequestFriend(userId: any) {
