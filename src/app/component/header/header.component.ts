@@ -93,27 +93,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	loadNotifications(): void {
 		this.fetchingResult = true;
 
-		this.subscriptions.push(
-			this.notificationService.getNotificationsRequestFriend().subscribe({
-				next: (notifications: any[]) => {
-					this.fetchingResult = false;
+		// this.subscriptions.push(
+		// 	this.notificationService.getNotificationsRequestFriend().subscribe({
+		// 		next: (notifications: any[]) => {
+		// 			this.fetchingResult = false;
 
-					this.notifications = [...notifications];
-					console.log(this.notifications);
-					if(this.notifications.length) {
-						this.hasUnseenNotification = true;
-					}
-				},
-				error: (errorResponse: HttpErrorResponse) => {
-					this.matSnackbar.openFromComponent(SnackbarComponent, {
-						data: AppConstants.snackbarErrorContent,
-						panelClass: ['bg-danger'],
-						duration: 5000
-					});
-					this.fetchingResult = false;
-				}
-			})
-		);
+		// 			this.notifications = [...notifications];
+		// 			console.log(this.notifications);
+		// 			if(this.notifications.length) {
+		// 				this.hasUnseenNotification = true;
+		// 			}
+		// 		},
+		// 		error: (errorResponse: HttpErrorResponse) => {
+		// 			this.matSnackbar.openFromComponent(SnackbarComponent, {
+		// 				data: AppConstants.snackbarErrorContent,
+		// 				panelClass: ['bg-danger'],
+		// 				duration: 5000
+		// 			});
+		// 			this.fetchingResult = false;
+		// 		}
+		// 	})
+		// );
 	}
 
 	acceptRequestFriend(requestFriendId: any) {

@@ -35,7 +35,7 @@
 						</h1>
 
 						<p>
-							<a class="text-decoration-none text-secondary mat-h3 cursor-pointer" style="font-weight: 500;" (click)="openFollowingDialog(profileUser)">
+							<a class="text-decoration-none text-secondary mat-h3 cursor-pointer" style="font-weight: 500;" (click)="openMyFriendsDialog()">
 								{{ listFriends.length ?? 0 }} Bạn bè
 							</a>
 							<!-- <span class="ps-2 pe-2 mat-h3 fw-bold">|</span>
@@ -52,8 +52,11 @@
 						<ng-container *ngIf="statusFriend === 'pending'">
 							<button mat-raised-button color="muted" style="background-color: #adadad;" (click)="cancelRequestFriend(currentRequestFriendId)">Đã gửi lời mời kết bạn</button>
 						</ng-container>
+						<ng-container *ngIf="statusFriend === 'waiting-for-current-user-response'">
+							<button mat-raised-button  style="background-color: yellow;" (click)="acceptRequestFriend(currentRequestFriendId)">Đồng ý kết bạn</button>
+						</ng-container>
 						<ng-container *ngIf="statusFriend === 'accepted'">
-							<button mat-raised-button color="success" (click)="acceptRequestFriend(currentRequestFriendId)">Bạn bè</button>
+							<button mat-raised-button color="success">Bạn bè</button>
 						</ng-container>
 						<button style="margin-left: 1rem;" mat-raised-button color="secondary" (click)="openUnfollowConfirmDialog(profileUser.id)">Nhắn tin</button>
 					</div>

@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/service/auth.service';
-import { MessageService } from 'src/app/service/message.service';
+// import { MessageService } from 'src/app/service/message.service';
 import { UserService } from 'src/app/service/user.service';
 import { environment } from 'src/environments/environment';
 
@@ -21,7 +21,7 @@ export class MessageComponent implements OnInit, OnDestroy {
   currentFriend: any;
 
 	constructor(
-    private messageService: MessageService,
+    // private messageService: MessageService,
     private userService: UserService,
     private authService: AuthService
   ) { }

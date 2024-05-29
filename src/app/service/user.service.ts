@@ -25,7 +25,7 @@ export class UserService {
 		return this.httpClient.get<UserResponse | HttpErrorResponse>(`${this.host}/user/${userId}`);
 	}
 
-	getUserSearchResult(keyword: string): Observable<UserResponse[] | HttpErrorResponse> {
+	getUserSearchResult(keyword: string): Observable<any[] | HttpErrorResponse> {
 		return this.httpClient.get<UserResponse[] | HttpErrorResponse>(`${this.host}/user/search/${keyword}`);
 	}
 
@@ -33,6 +33,10 @@ export class UserService {
 		const formData = new FormData();
 		formData.append('file', fileImage);
 		return this.httpClient.post<any>(`${this.host}/user/upload`, formData);
+	}
+
+	getAllRequestFriend(): Observable<any[] | HttpErrorResponse> {
+		return this.httpClient.get<Notification[] | HttpErrorResponse>(`${this.host}/user/friend-request/me/received-requests`);
 	}
 	
 	getAllFriendByUserId() {

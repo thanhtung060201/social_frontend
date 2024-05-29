@@ -10,6 +10,10 @@ import { AuthService } from 'src/app/service/auth.service';
 import { PostService } from 'src/app/service/post.service';
 import { TimelineService } from 'src/app/service/timeline.service';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
+import { UserService } from 'src/app/service/user.service';
+import { environment } from 'src/environments/environment';
+import { MatDialog } from '@angular/material/dialog';
+import { SuggestFriendDialogComponent } from '../suggest-friend-dialog/suggest-friend-dialog.component';
 
 @Component({
 	selector: 'app-timeline',
@@ -26,18 +30,25 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	targetTagName: string;
 	loadingTimelinePostsInitially: boolean = true;
 	loadingTimelineTagsInitially: boolean = true;
+	requestFriends: any[] = [];
+	listFriends: any[] = [];
+	listFriendsBodToday: any[] = [];
 
 	private subscriptions: Subscription[] = [];
+	defaultProfilePhoto = environment.defaultProfilePhoto;
+
 
 	constructor(
 		private authService: AuthService,
+		private userService: UserService,
 		private timelineService: TimelineService,
 		private postService: PostService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private matSnackbar: MatSnackBar,
-    private cd: ChangeDetectorRef
-  ) { }
+		private cd: ChangeDetectorRef,
+		private matDialog: MatDialog,
+	) { }
 
 	ngOnInit(): void {
 		if (!this.authService.isUserLoggedIn()) {
@@ -52,6 +63,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			}
 
 			this.loadTimelineTags();
+			this.loadAllRequestFriend();
+			this.loadAllFriendByUserId();
 		}
 	}
 
@@ -60,32 +73,32 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	}
 
 	loadTimelinePosts(): void {
-    this.timelineService.getTimelinePosts().subscribe({
-      next: (postResponseList: any[]) => {
-        if (!postResponseList.length) this.noPost = true;
+		this.timelineService.getTimelinePosts().subscribe({
+			next: (postResponseList: any[]) => {
+				if (!postResponseList.length) this.noPost = true;
 
-        // postResponseList.forEach(pR => this.timelinePostResponseList.push(pR));
-        this.timelinePostResponseList = [...postResponseList.sort((a, b) => (a.id > b.id ? -1 : 1))];
+				// postResponseList.forEach(pR => this.timelinePostResponseList.push(pR));
+				this.timelinePostResponseList = [...postResponseList.sort((a, b) => (a.id > b.id ? -1 : 1))];
 
-        // if (postResponseList.length > 0) {
-        // 	this.hasMoreResult = true;
-        // } else {
-        // 	this.hasMoreResult = false;
-        // }
+				// if (postResponseList.length > 0) {
+				// 	this.hasMoreResult = true;
+				// } else {
+				// 	this.hasMoreResult = false;
+				// }
 
-        // this.fetchingResult = false;
-        this.loadingTimelinePostsInitially = false;
-        this.cd.detectChanges();
-      },
-      error: (errorResponse: HttpErrorResponse) => {
-        this.matSnackbar.openFromComponent(SnackbarComponent, {
-          data: AppConstants.snackbarErrorContent,
-          panelClass: ['bg-danger'],
-          duration: 5000
-        });
-        this.fetchingResult = false;
-      }
-    })
+				// this.fetchingResult = false;
+				this.loadingTimelinePostsInitially = false;
+				this.cd.detectChanges();
+			},
+			error: (errorResponse: HttpErrorResponse) => {
+				this.matSnackbar.openFromComponent(SnackbarComponent, {
+					data: AppConstants.snackbarErrorContent,
+					panelClass: ['bg-danger'],
+					duration: 5000
+				});
+				this.fetchingResult = false;
+			}
+		})
 	}
 
 	loadTaggedPosts(tagName: string, currentPage: number): void {
@@ -118,12 +131,12 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	}
 
 	loadTimelineTags(): void {
-    this.loadingTimelineTagsInitially = false;
+		this.loadingTimelineTagsInitially = false;
 		this.fetchingResult = true;
 		this.subscriptions.push(
 			this.timelineService.getTimelineTags().subscribe({
 				next: (tagList: Tag[]) => {
-          this.timelineTagList = [...tagList];
+					this.timelineTagList = [...tagList];
 					this.loadingTimelineTagsInitially = false;
 					this.fetchingResult = false;
 				},
@@ -137,5 +150,41 @@ export class TimelineComponent implements OnInit, OnDestroy {
 				}
 			})
 		);
+	}
+
+	loadAllRequestFriend() {
+		this.userService.getAllRequestFriend().subscribe({
+			next: (requestFriends: any[]) => {
+				this.fetchingResult = false;
+
+				this.requestFriends = [...requestFriends.map((requestFriend) => requestFriend.creator)];
+				console.log(this.requestFriends);
+			},
+			error: (errorResponse: HttpErrorResponse) => {
+				this.matSnackbar.openFromComponent(SnackbarComponent, {
+					data: AppConstants.snackbarErrorContent,
+					panelClass: ['bg-danger'],
+					duration: 5000
+				});
+				this.fetchingResult = false;
+			}
+		})
+	}
+
+	loadAllFriendByUserId() {
+		this.userService.getAllFriendByUserId().subscribe((data: any) => {
+			this.listFriends = [...data];
+			this.listFriendsBodToday = [...data.filter((friend) => friend.id != this.authService.getAuthUserId() && friend.dob && new Date(friend.dob).getDay() == new Date(Date.now()).getDay() && new Date(friend.dob).getMonth() == new Date(Date.now()).getMonth())];
+			console.log(this.listFriendsBodToday);
+		})
+	}
+
+	openDialogSuggestFriend() {
+		this.matDialog.open(SuggestFriendDialogComponent, {
+			data: null,
+			autoFocus: false,
+			minWidth: '500px',
+			maxWidth: '700px'
+		});
 	}
 }

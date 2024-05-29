@@ -1,0 +1,25 @@
+<mat-dialog-content style="width: 700px; max-height: 75vh;">
+	<div class="position-relative">
+		<h2 class="mat-h2 m-0">
+			Gợi ý kết bạn
+		</h2>
+		<hr class="divider">
+		<div class="position-relative">
+			<mat-form-field appearance="outline" class="w-100" style="padding-right: 90px;">
+				<mat-label>Nhập tên người bạn muốn tìm</mat-label>
+				<input matInput [formControl]="keyword" placeholder="Nhập tên người bạn muốn tìm">
+			</mat-form-field>
+			<button mat-raised-button color="primary" style="position: absolute; right: 0; top: 10px;"
+				(click)="searchUser()">Tìm kiếm</button>
+		</div>
+		<div class="row">
+			<div *ngFor="let user of users" style="flex-direction: column; align-items: center;" class="col-4 mt-4 d-flex justify-content-center">
+				<div class="profile-picture centered-bg-image d-inline-block border border-5 border-white rounded-3 cursor-pointer mat-elevation-z3 p-0 mb-2"
+					style="height: 180px; width: 180px; background-color: white; background-image: url('assets/images/{{user.imagePath ? user.imagePath : defaultProfilePhoto}}');">
+				</div>
+				<div style="font-weight: bold; text-align: center; font-size: 16px;">{{ user.lastName }} {{ user.firstName }}</div>
+				<button [ngClass]="user.isRequestFriend ? 'colorRequested' : ''" (click)="sendRequestFriend(user.id)" style="font-weight: normal;" mat-raised-button color="primary" style="padding: 1px 2rem;" class="mt-2">{{ user.isRequestFriend ? 'Đã gửi yêu cầu kết bạn' : 'Kết bạn' }}</button>
+			</div>
+		</div>
+	</div>
+</mat-dialog-content>

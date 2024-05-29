@@ -37,7 +37,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	fetchingResult: boolean = false;
 	loadingProfile: boolean = false;
 	hasNoPost: boolean = false;
-	statusFriend: 'pending' | 'accepted' | 'declined' | 'not-sent' = 'not-sent';
+	statusFriend: 'pending' | 'accepted' | 'declined' | 'not-sent' | 'waiting-for-current-user-response' = 'not-sent';
 	currentRequestFriendId: string = '';
 	listFriends: any[] = [];
 
@@ -167,24 +167,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		})
 	}
 
-	openFollowingDialog(user: User): void {
-		this.matDialog.open(FollowingFollowerListDialogComponent, {
-			data: {
-				user,
-				type: 'following'
-			},
-			autoFocus: false,
-			minWidth: '400px',
-			maxWidth: '500px'
-		});
-	}
+	// openFollowingDialog(user: User): void {
+	// 	this.matDialog.open(FollowingFollowerListDialogComponent, {
+	// 		data: {
+	// 			user,
+	// 			type: 'following'
+	// 		},
+	// 		autoFocus: false,
+	// 		minWidth: '400px',
+	// 		maxWidth: '500px'
+	// 	});
+	// }
 
-	openFollowerDialog(user: User): void {
+	openMyFriendsDialog(): void {
 		this.matDialog.open(FollowingFollowerListDialogComponent, {
-			data: {
-				user,
-				type: 'follower'
-			},
+			data: this.listFriends,
 			autoFocus: false,
 			minWidth: '400px',
 			maxWidth: '500px'

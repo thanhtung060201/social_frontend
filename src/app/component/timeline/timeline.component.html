@@ -5,15 +5,15 @@
 <div style="margin-top: 100px" *ngIf="!loadingTimelinePostsInitially && !loadingTimelineTagsInitially">
 	<div class="container">
 		<div class="row justify-content-center mt-5">
-			<div class="col-4">
+			<div class="col-3">
 				<div class="profile-sidebar position-sticky bg-white rounded mat-elevation-z3 p-3" style="top: 64px;">
 					<div *ngIf="timelineTagList.length > 0">
 						<h2 class="mat-h2">Thẻ được sử dụng nhiều</h2>
 						<a class="d-block p-3 text-decoration-none fw-500 border border-1 border-start-0 border-end-0"
-						 style=" font-size: 14px;"
-						 *ngFor="let tag of timelineTagList; let last = last;" href="/posts/tags/{{ tag.name }}" [ngClass]="last ? '' : 'border-bottom-0'">
+							style=" font-size: 14px;" *ngFor="let tag of timelineTagList; let last = last;"
+							href="/posts/tags/{{ tag.name }}" [ngClass]="last ? '' : 'border-bottom-0'">
 							#{{ tag.name }}
-              <!-- <span class="badge rounded-pill text-dark float-end" style="background-color: rgba(0,0,0,0.15);">{{ tag.tagUseCounter }}</span> -->
+							<!-- <span class="badge rounded-pill text-dark float-end" style="background-color: rgba(0,0,0,0.15);">{{ tag.tagUseCounter }}</span> -->
 						</a>
 					</div>
 					<div *ngIf="timelineTagList.length === 0">
@@ -27,7 +27,9 @@
 
 				<div class="timeline-posts">
 					<p class="fw-500 text-center" *ngIf="noPost">No Post Found</p>
-					<app-post *ngFor="let postResponse of timelinePostResponseList" id="{{'profilePost' + postResponse.id}}" [postResponse]="postResponse" (postDeletedEvent)="loadTimelinePosts()"></app-post>
+					<app-post *ngFor="let postResponse of timelinePostResponseList"
+						id="{{'profilePost' + postResponse.id}}" [postResponse]="postResponse"
+						(postDeletedEvent)="loadTimelinePosts()"></app-post>
 				</div>
 
 				<!-- <div class="text-center mb-4">
@@ -35,6 +37,56 @@
 					<button mat-raised-button color="primary" class="mat-btn-lg rounded-pill" *ngIf="hasMoreResult && !fetchingResult && !isTaggedPostPage" (click)="loadTimelinePosts(resultPage)">Load More</button>
 					<button mat-raised-button color="primary" class="mat-btn-lg rounded-pill" *ngIf="hasMoreResult && !fetchingResult && isTaggedPostPage" (click)="loadTaggedPosts(targetTagName, resultPage)">Load More</button>
 				</div> -->
+			</div>
+
+			<div class="col-3">
+				<div class="profile-sidebar bg-white rounded mat-elevation-z3 p-3">
+					<div>
+						<h2 class="mat-h2">Lời mời kết bạn</h2>
+						<div class="d-block py-1 text-decoration-none fw-500 border border-1 border-start-0 border-end-0"
+							style=" font-size: 14px;" *ngFor="let requestFriend of requestFriends; let last = last;"
+							[ngClass]="last ? '' : 'border-bottom-0'">
+							<li class="list-group-item ps-0 pt-2 pe-0 pb-2">
+								<span class="rounded-circle d-inline-block align-middle centered-bg-image"
+									style="width: 30px; height: 30px; background-image: url('assets/images/{{requestFriend.imagePath ? requestFriend.imagePath : defaultProfilePhoto}}');">
+								</span>
+								<a class="d-inline-block text-decoration-none text-dark align-middle ps-2 fw-500 cursor-pointer"
+									href="/users/{{requestFriend.id}}">{{requestFriend.lastName + ' ' + requestFriend.firstName}}</a>
+								<span style="font-weight: normal; padding-left: 0.25rem;">đã gửi lời mời kết bạn</span>	
+							</li>
+						</div>
+					</div>
+				</div>
+
+				<div class="profile-sidebar bg-white rounded mat-elevation-z3 p-3 mt-3">
+					<div>
+						<h2 class="mat-h2">Sinh nhật hôm nay</h2>
+						<div [routerLink]="['/users', friendDob.id]" class="d-block p-3 text-decoration-none fw-500 border border-1 border-start-0 border-end-0"
+							style="cursor: pointer; font-size: 14px;" *ngFor="let friendDob of listFriendsBodToday; let last = last;"
+							[ngClass]="last ? '' : 'border-bottom-0'">
+							<span style="margin-right: 0.25rem; color: red;"><i class="fa fa-birthday-cake" aria-hidden="true"></i></span><span style="font-weight: normal;">Hôm nay là sinh nhật của</span><span style="font-weight: bold; padding-left: 0.25rem;">{{friendDob.lastName + ' ' + friendDob.firstName}}</span>, <span style="font-weight: normal;">hãy gửi những lời chúc thân thương vào đây nào</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="profile-sidebar bg-white rounded mat-elevation-z3 p-3 mt-3">
+					<div>
+						<div style="display: flex; justify-content: space-between; align-items: center;">
+							<h2 class="mat-h2">Danh sách bạn bè</h2>
+							<i (click)="openDialogSuggestFriend()" matTooltip="Danh sách gợi ý kết bạn" matTooltipPosition="left" style="font-size: 20px; color: tomato; margin-top: -20px; cursor: pointer;" class="fa fa-user-plus" aria-hidden="true"></i></div>
+						<div class="d-block p-1 text-decoration-none fw-500 border border-1 border-start-0 border-end-0"
+							style=" font-size: 14px;" *ngFor="let friend of listFriends; let last = last;"
+							[ngClass]="last ? '' : 'border-bottom-0'">
+							<li class="list-group-item ps-0 pt-2 pe-0 pb-2">
+								<span class="rounded-circle d-inline-block align-middle centered-bg-image"
+									style="width: 30px; height: 30px; background-image: url('assets/images/{{friend.imagePath ? friend.imagePath : defaultProfilePhoto}}');">
+								</span>
+								<a class="d-inline-block text-decoration-none text-dark align-middle ps-2 fw-500 cursor-pointer"
+									href="/users/{{friend.id}}">{{friend.lastName + ' ' + friend.firstName}}</a>
+							</li>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

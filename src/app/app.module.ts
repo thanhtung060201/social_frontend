@@ -60,9 +60,10 @@ import { PhotoUploadDialogComponent } from './component/photo-upload-dialog/phot
 import { TagDialogComponent } from './component/tag-dialog/tag-dialog.component';
 import { ForgotPasswordDialogComponent } from './component/forgot-password-dialog/forgot-password-dialog.component';
 import { ResetPasswordComponent } from './component/reset-password/reset-password.component';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { SuggestFriendDialogComponent } from './component/suggest-friend-dialog/suggest-friend-dialog.component';
+// import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
-const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
+// const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
 @NgModule({
 	declarations: [
@@ -90,11 +91,12 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 		PostDetailComponent,
 		WaitingDialogComponent,
 		SettingsComponent,
-  SearchDialogComponent,
-  PhotoUploadDialogComponent,
-  TagDialogComponent,
-  ForgotPasswordDialogComponent,
-  ResetPasswordComponent
+		SearchDialogComponent,
+		PhotoUploadDialogComponent,
+		TagDialogComponent,
+		ForgotPasswordDialogComponent,
+		ResetPasswordComponent,
+		SuggestFriendDialogComponent
 	],
 	imports: [
 		BrowserModule,
@@ -126,7 +128,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 		MatDatepickerModule,
 		MatNativeDateModule,
 		MatMomentDateModule,
-    SocketIoModule.forRoot(config),
+		// SocketIoModule.forRoot(config),
 	],
 	providers: [
 		AuthGuard,
