@@ -12,6 +12,18 @@ export class NotificationService {
 
 	constructor(private httpClient: HttpClient) { }
 
+	sentNotification(receiverId: number, type: string, postId: string) {
+		const body = {
+			type: type,
+			postId: postId
+		}
+		return this.httpClient.post<any | HttpErrorResponse>(`${this.host}/notification/sent/${receiverId}`, body);
+	}
+
+	getAllNotification() {
+		return this.httpClient.get<any | HttpErrorResponse>(`${this.host}/notification/getAll`);
+	}
+
 	markAllSeen():  Observable<any | HttpErrorResponse> {
 		return this.httpClient.post<any | HttpErrorResponse>(`${this.host}/notifications/mark-seen`, null);
 	}

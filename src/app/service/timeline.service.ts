@@ -21,6 +21,10 @@ export class TimelineService {
 		return this.httpClient.get<PostResponse[] | HttpErrorResponse>(`${this.host}/newfeed`);
 	}
 
+	// getAllPostWithFriend() {
+	// 	return this.httpClient.get<PostResponse[] | HttpErrorResponse>(`${this.host}/newfeed/friend`);
+	// }
+
 	getTimelineTags(): Observable<Tag[] | HttpErrorResponse> {
 		return this.httpClient.get<Tag[] | HttpErrorResponse>(`${this.host}/tag`);
 	}

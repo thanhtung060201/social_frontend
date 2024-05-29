@@ -17,6 +17,7 @@ import { CommentLikeDialogComponent } from '../comment-like-dialog/comment-like-
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { PostLikeDialogComponent } from '../post-like-dialog/post-like-dialog.component';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
+import { NotificationService } from 'src/app/service/notification.service';
 
 @Component({
 	selector: 'app-post-comment-dialog',
@@ -46,7 +47,9 @@ export class PostCommentDialogComponent implements OnInit, OnDestroy {
 		private commentService: CommentService,
 		private formBuilder: FormBuilder,
 		private matDialog: MatDialog,
-		private matSnackbar: MatSnackBar) { }
+		private matSnackbar: MatSnackBar,
+		private notificationService: NotificationService
+	) { }
 
 	get content() { return this.commentFormGroup.get('content') }
 
@@ -85,7 +88,7 @@ export class PostCommentDialogComponent implements OnInit, OnDestroy {
 		this.creatingComment = true;
 		this.subscriptions.push(
 			this.postService.createPostComment(this.dataPost.id, this.content.value).subscribe({
-				next: (newComment: CommentResponse) => {
+				next: (newComment: any) => {
 					this.commentFormGroup.reset();
 					Object.keys(this.commentFormGroup.controls).forEach(key => {
 						this.commentFormGroup.get(key).setErrors(null) ;
@@ -93,7 +96,10 @@ export class PostCommentDialogComponent implements OnInit, OnDestroy {
 					this.commentResponseList.unshift(newComment);
 					this.updatedCommentEvent.emit();
 					this.creatingComment = false;
-
+					console.log(newComment);
+					if(this.dataPost.author.id !== this.authService.getAuthUserId()) {
+						this.notificationService.sentNotification(this.dataPost.author.id, 'comment', this.dataPost.id).subscribe({});
+					}
 				},
 				error: (errorResponse: HttpErrorResponse) => {
 					this.matSnackbar.openFromComponent(SnackbarComponent, {

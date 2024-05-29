@@ -16,6 +16,7 @@ import { PostShareDialogComponent } from '../post-share-dialog/post-share-dialog
 import { ShareConfirmDialogComponent } from '../share-confirm-dialog/share-confirm-dialog.component';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
 import { WaitingDialogComponent } from '../waiting-dialog/waiting-dialog.component';
+import { NotificationService } from 'src/app/service/notification.service';
 
 @Component({
 	selector: 'app-post',
@@ -35,7 +36,9 @@ export class PostComponent implements OnInit, OnDestroy {
 		private matDialog: MatDialog,
 		private matSnackbar: MatSnackBar,
 		private authService: AuthService,
-		private postService: PostService) { }
+		private postService: PostService,
+		private notificationService: NotificationService
+	) { }
 
 	ngOnInit(): void {
 		this.authUserId = this.authService.getAuthUserId();
@@ -141,13 +144,14 @@ export class PostComponent implements OnInit, OnDestroy {
 		);
 	}
 
-	likeOrUnlikePost(likedByAuthUser: boolean) {
+	likeOrUnlikePost(likedByAuthUser: boolean, postResponse: any) {
+		console.log(postResponse);
 		if (likedByAuthUser) {
       const favoriteId = this.postResponse.favorites.filter((data) => data.userId === this.authUserId)[0].id;
 			this.subscriptions.push(
 				this.postService.unlikePost(favoriteId).subscribe({
 					next: (response: any) => {
-            this.postDeletedEvent.emit(this.postResponse);
+            			this.postDeletedEvent.emit(this.postResponse);
 					},
 					error: (errorResponse: HttpErrorResponse) => {
 						this.matSnackbar.openFromComponent(SnackbarComponent, {
@@ -162,7 +166,10 @@ export class PostComponent implements OnInit, OnDestroy {
 			this.subscriptions.push(
 				this.postService.likePost(this.postResponse.id).subscribe({
 					next: (response: any) => {
-            this.postDeletedEvent.emit(this.postResponse);
+            			this.postDeletedEvent.emit(this.postResponse);
+						if(postResponse.author.id !== this.authService.getAuthUserId()) {
+							this.notificationService.sentNotification(postResponse.author.id, 'like', postResponse.id).subscribe({});
+						}
 					},
 					error: (errorResponse: HttpErrorResponse) => {
 						this.matSnackbar.openFromComponent(SnackbarComponent, {

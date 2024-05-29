@@ -80,6 +80,10 @@ export class TimelineComponent implements OnInit, OnDestroy {
 				// postResponseList.forEach(pR => this.timelinePostResponseList.push(pR));
 				this.timelinePostResponseList = [...postResponseList.sort((a, b) => (a.id > b.id ? -1 : 1))];
 
+				this.timelinePostResponseList = this.timelinePostResponseList.filter((data) => data.userIds.includes(data.author.id));
+
+				console.log('-------------', this.timelinePostResponseList);
+
 				// if (postResponseList.length > 0) {
 				// 	this.hasMoreResult = true;
 				// } else {
@@ -175,8 +179,11 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		this.userService.getAllFriendByUserId().subscribe((data: any) => {
 			this.listFriends = [...data];
 			this.listFriendsBodToday = [...data.filter((friend) => friend.id != this.authService.getAuthUserId() && friend.dob && new Date(friend.dob).getDay() == new Date(Date.now()).getDay() && new Date(friend.dob).getMonth() == new Date(Date.now()).getMonth())];
-			console.log(this.listFriendsBodToday);
 		})
+	}
+
+	acceptRequestFriend(requestFriendId: any) {
+		this.userService.updateRequestFriend(requestFriendId, 'accepted').subscribe((data) => {})
 	}
 
 	openDialogSuggestFriend() {
