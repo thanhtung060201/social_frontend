@@ -40,12 +40,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	statusFriend: 'pending' | 'accepted' | 'declined' | 'not-sent' | 'waiting-for-current-user-response' = 'not-sent';
 	currentRequestFriendId: string = '';
 	listFriends: any[] = [];
+	dataRequest: any;
 
 	private subscriptions: Subscription[] = [];
 
 	constructor(
 		private userService: UserService,
-		private authService: AuthService,
+		public authService: AuthService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private matDialog: MatDialog,
@@ -149,8 +150,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	getStatusRequestFriend() {
 		this.userService.getStatusRequestFriend(this.profileUserId).subscribe((data: any) => {
 			this.statusFriend = data.status as any;
-      console.log(data);
 			this.currentRequestFriendId = data.id;
+      this.dataRequest = data;
 		});
 	}
 

@@ -26,22 +26,18 @@
 			<h2 class="mat-h2 m-0 text-center" style="padding: 12px 20px 20px 20px; font-size: 16px;" *ngIf="notifications.length > 0" (click)="$event.stopPropagation();">Thông báo</h2>
 
 			<a mat-menu-item *ngFor="let notification of notifications; let last = last;"
+        [routerLink]="['/posts/${notification.postId}']"
 			 class="border border-1 border-start-0 border-end-0"
 			 [ngClass]="last ? '' : 'border-bottom-0'"
 			 style="height: auto; line-height: 1.6; white-space: normal; font-size: 14px; padding: 16px 20px;">
-			 	<!-- <mat-icon color="primary" style="margin-right: 5px;" *ngIf="notification.type === 'POST_LIKE' || notification.type === 'COMMENT_LIKE'">favorite</mat-icon>
-			 	<mat-icon color="primary" style="margin-right: 5px;" *ngIf="notification.type === 'POST_COMMENT'">comment</mat-icon>
-			 	<mat-icon color="primary" style="margin-right: 5px;" *ngIf="notification.type === 'POST_SHARE'">share</mat-icon> -->
-
-				<!-- <div style="display: flex; align-items: center;">
-					<div>
-						<span class="fw-500" *ngIf="notification.creator">{{ notification.creator.lastName + ' ' + notification.creator.firstName }}</span>
-						<span style="margin-left: 0.25rem">đã gửi lời mời kết bạn</span>
-					</div>
-					<div style="margin-left: 2rem;">
-						<button mat-raised-button color="primary" (click)="acceptRequestFriend(notification.id)">Đồng ý</button>
-					</div>
-				</div> -->
+			 	<mat-icon color="primary" style="margin-right: 5px;" *ngIf="notification.type === 'like'">favorite</mat-icon>
+			 	<mat-icon color="primary" style="margin-right: 5px;" *ngIf="notification.type === 'comment'">comment</mat-icon>
+        <span>
+            <span style="font-weight: 700; margin-right: 3px;">{{notification?.creator?.lastName}} {{ notification?.creator?.firstName }}</span>
+            <span *ngIf="notification.type === 'like'">Đã thích bài viết của bạn</span>
+            <span *ngIf="notification.type === 'comment'">Đã bình luận bài viết của bạn</span>
+        </span>
+			 	<!-- <mat-icon color="primary" style="margin-right: 5px;" *ngIf="notification.type === 'POST_SHARE'">share</mat-icon> -->
 
 				<!-- <span *ngIf="notification.type === 'POST_LIKE'">
 					<span *ngIf="notification.owningPost.likeCount > 1">
