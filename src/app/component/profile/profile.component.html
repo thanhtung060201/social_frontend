@@ -49,16 +49,16 @@
 						<ng-container *ngIf="statusFriend === 'not-sent' || statusFriend === 'declined'">
 							<button mat-raised-button color="primary" (click)="sendRequestFriend(profileUser.id)">Thêm bạn bè</button>
 						</ng-container>
-						<ng-container *ngIf="statusFriend === 'pending' && this.authService.getAuthUserId() == dataRequest.creator.id">
+						<ng-container *ngIf="statusFriend === 'pending' && this.authService.getAuthUserId() == dataRequest?.creator?.id">
 							<button mat-raised-button color="muted" style="background-color: #adadad;" (click)="cancelRequestFriend(currentRequestFriendId)">Đã gửi lời mời kết bạn</button>
 						</ng-container>
-						<ng-container *ngIf="statusFriend === 'pending' && this.authService.getAuthUserId() == dataRequest.receiver.id">
+						<ng-container *ngIf="statusFriend === 'pending' && this.authService.getAuthUserId() == dataRequest?.receiver?.id">
 							<button mat-raised-button  style="background-color: yellow;" (click)="acceptRequestFriend(currentRequestFriendId)">Đồng ý kết bạn</button>
 						</ng-container>
 						<ng-container *ngIf="statusFriend === 'accepted'">
 							<button mat-raised-button color="success">Bạn bè</button>
 						</ng-container>
-						<button style="margin-left: 1rem;" mat-raised-button color="secondary" (click)="openUnfollowConfirmDialog(profileUser.id)">Nhắn tin</button>
+						<button style="margin-left: 1rem;" mat-raised-button color="secondary" (click)="moveMessagePage(profileUser.id)">Nhắn tin</button>
 					</div>
 				</div>
 			</div>

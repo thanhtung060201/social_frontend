@@ -111,6 +111,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
 	}
 
+  moveMessagePage(id: number) {
+    this.router.navigate(['/message']);
+    localStorage.setItem('messageId', id.toString());
+  }
+
 	ngOnDestroy(): void {
 		this.subscriptions.forEach(sub => sub.unsubscribe());
 	}
